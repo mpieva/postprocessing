@@ -110,13 +110,25 @@ workflow {
     // 2. Filter the bam files
     //
 
-    // collect sorted bams
-    bam = bam.map{ it[1] }.collect()
-    bam = bam.map{ [[:], it] }
+    //include a meta-file with all fields existing
+    meta = Channel.fromPath("$baseDir/assets/pipeline/meta.tsv").splitCsv(sep:'\t', header:true)
+    bam.combine(meta).map{ m1, bam, meta -> [meta, bam] }.set{ bam }
+
+    bam.map {
+        [
+            it[0] + [
+                "id":it[1].baseName.replace("sorted_",""),
+                "RG":it[1].baseName.replace("sorted_",""),
+            ],
+            it[1]
+        ]
+    }
+    .set{ bam }
 
     bamfilter( bam )
 
     bam = bamfilter.out.bam
+    bam.view()
     ch_versions = ch_versions.mix( bamfilter.out.versions )
 
 }

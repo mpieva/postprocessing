@@ -15,22 +15,3 @@
     //
 
     write_reports( ch_final, ch_versions )
-
-
-    ///
-    //
-    //
-    //include a meta-file with all fields existing
-    meta = Channel.fromPath("$baseDir/assets/pipeline/meta.tsv").splitCsv(sep:'\t', header:true)
-    bam.combine(meta).map{ m1, bam, meta -> [meta, bam] }.set{ bam }
-
-    bam.map {
-        [
-            it[0] + [
-                "id":it[1].baseName,
-                "RG":it[1].baseName,
-            ],
-            it[1]
-        ]
-    }
-    .set{ bam }

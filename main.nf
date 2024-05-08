@@ -5,8 +5,7 @@ include { setup             } from './workflows/00_setup'
 include { splitbam          } from './workflows/01_splitbam'
 include { splitdir          } from './workflows/01_splitdir'
 include { bamfilter         } from './workflows/02_bamfilter'
-
-include { deamination_stats } from './workflows/08_deamination_stats'
+include { substitutions     } from './workflows/03_substitutions'
 include { write_reports     } from './workflows/09_reports.nf'
 
 //The colors
@@ -128,7 +127,14 @@ workflow {
     bamfilter( bam )
 
     bam = bamfilter.out.bam
-    bam.view()
     ch_versions = ch_versions.mix( bamfilter.out.versions )
+
+    //
+    // 3. Calculate Subsitutions
+    //
+
+    substitutions(bam)
+    bam = substitutions.out.bam
+    ch_versions = ch_versions.mix( substitutions.out.versions )
 
 }

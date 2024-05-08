@@ -1,0 +1,9 @@
+This is not yet done...
+
+
+
+PROFILES:
+The following execution profiles are available (see '-profile' above):
+  * singularity      run all processes in a singularity container
+  * docker           run all processes in a docker container
+  * debug            dont remove intermediate files after run

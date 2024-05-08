@@ -1,14 +1,4 @@
-    //
-    // 8. Run Deamination workflow
-    //
-
-    deamination_stats( best, deduped.fixed )
-
-    // get the meta-table from the "best"-libraries
-    best = deamination_stats.out.best.map{ it[0] }
-    fixed = deamination_stats.out.fixed.map{ it[0] }
-
-    ch_final.mix( best ).mix( fixed ).set{ch_final}
+     ch_final.mix( best ).mix( fixed ).set{ch_final}
 
     //
     // 9. Write the output files

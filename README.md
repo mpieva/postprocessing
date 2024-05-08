@@ -18,29 +18,6 @@ The first version of the Shotgun Sequencing pipeline follows Matejas Labfolder E
 
 -- WIP --
 
-compute average length of sequences
-
-```
-for i in \*.bam; do perl /home/mateja_hajdinjak/Scripts/mateja_basic_bam/average_length_of_sequences.pl ${i} >> average_fragment_length.L35MQ25.txt; done
-
-rm average*seq*\*
-
-```
-
-5. Compute substitution patterns on the deduped, length and mapping quality filtered files
-
-```
-
-mkdir Substitution_patterns_L35MQ25
-
-/home/mmeyer/perlscripts/solexa/analysis/substitution_patterns.pl -minread 35 -quality 25 ../AnalyzeBAM_L35MQ25/\*.bam
-
-perl /home/mmeyer/perlscripts/solexa/analysis/summarize_CT_frequencies.pl -screen \* > CT_substitutions.L35MQ25.txt
-
-rm _3p_ _5p_
-
-```
-
 6. Compute conditional substitution patterns on the deduped, length and mapping quality filtered files
 
 ```

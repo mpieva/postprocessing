@@ -2,7 +2,6 @@ process SAMTOOLS_SORT{
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.15.1--h1170115_0' :
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
-    tag "$meta.id:$meta.Taxon"
     label "local"
 
     input:

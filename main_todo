@@ -1,0 +1,36 @@
+    //
+    // 8. Run Deamination workflow
+    //
+
+    deamination_stats( best, deduped.fixed )
+
+    // get the meta-table from the "best"-libraries
+    best = deamination_stats.out.best.map{ it[0] }
+    fixed = deamination_stats.out.fixed.map{ it[0] }
+
+    ch_final.mix( best ).mix( fixed ).set{ch_final}
+
+    //
+    // 9. Write the output files
+    //
+
+    write_reports( ch_final, ch_versions )
+
+
+    ///
+    //
+    //
+    //include a meta-file with all fields existing
+    meta = Channel.fromPath("$baseDir/assets/pipeline/meta.tsv").splitCsv(sep:'\t', header:true)
+    bam.combine(meta).map{ m1, bam, meta -> [meta, bam] }.set{ bam }
+
+    bam.map {
+        [
+            it[0] + [
+                "id":it[1].baseName,
+                "RG":it[1].baseName,
+            ],
+            it[1]
+        ]
+    }
+    .set{ bam }

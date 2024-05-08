@@ -16,18 +16,18 @@ The first version of the Shotgun Sequencing pipeline follows Matejas Labfolder E
 
 1. Split the mapped BAM files according to the perfect index match using splitBAM.pl from Matthias.
 
-(Use quicksand start)
+(Use reluctant start)
 
 ```
 /home/mmeyer/perlscripts/solexa/filework/splitBAM.pl -byfile indices_PA5304.txt /mnt/ngs_data/231009_NS500559_0194_AHMKC7AFX5_PEdi_PA5304/results/aligned/s_all_sequence_tagged_ancient_hg19_evan.bam > splitting_stats.txt
 ```
 
 2. Alternatively: Start with already demultiplexed reads
-   (Use quicksand start)
+   (Use reluctant start)
 
 3. Compute index stats and cross contamination
 
-(Use quicksand, include index_stats)
+(Use reluctant, include index_stats)
 
 ```
 perl /home/mmeyer/perlscripts/solexa/analysis/indexstats.pl splitting_stats.txt > index_stats.txt

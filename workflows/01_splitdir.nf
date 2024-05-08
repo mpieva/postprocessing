@@ -1,4 +1,6 @@
 include { ESTIMATE_CC }     from '../modules/local/ccestimate'
+include { INDEX_STATS }     from '../modules/local/perl_indexstats'
+include { SAMTOOLS_SORT }   from '../modules/local/samtools_sort'
 include { SAMTOOLS_FQ2BAM } from '../modules/local/samtools_fq2bam'
 
 // some required functions
@@ -24,11 +26,16 @@ workflow splitdir {
         ESTIMATE_CC( split.stats.first() )
         cc_versions = ESTIMATE_CC.out.versions
 
+        INDEX_STATS(split.stats.first())
+        cc_versions = cc_versions.mix(INDEX_STATS.out.versions)
+
         // convert fastq to bam
         SAMTOOLS_FQ2BAM( split.fastq )
+        bams = split.bam.mix( SAMTOOLS_FQ2BAM.out.bam )
 
+        SAMTOOLS_SORT(bams)
 
     emit:
-        bams = split.bam.mix( SAMTOOLS_FQ2BAM.out.bam )
+        bams = SAMTOOLS_SORT.out.bam
         versions = cc_versions.mix(SAMTOOLS_FQ2BAM.out.versions.first())
 }

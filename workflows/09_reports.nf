@@ -3,7 +3,7 @@ workflow write_reports {
     take: ch_versions
     main:
 
-    def basedir = "quicksand_${workflow.manifest.version}"
+    def basedir = "reluctant_${workflow.manifest.version}"
 
     //
     //
@@ -124,7 +124,7 @@ workflow write_reports {
         ].join('\t')
     }
     .subscribe {
-        println "[quicksand]: Summary reports saved"
+        println "[reluctant]: Summary reports saved"
     }
 
     ch_final
@@ -161,7 +161,7 @@ workflow write_reports {
         ].join('\t')
     }
     .subscribe {
-        println "[quicksand]: Filtered report saved"
+        println "[reluctant]: Filtered report saved"
     }
 
     ch_final

@@ -8,17 +8,7 @@ workflow setup {
     main:
         // write the commandline down
         log.info """
-[quicksand]: Execution started: ${workflow.start.format('dd.MM.yyyy HH:mm')} ${cyan}
-
-  ============================================================
-  ==========================  =============================  =
-  ==    ==  =  ==  ===   ===  =  ===   ====   ===  ========  =
-  =  =  ==  =  ======  =  ==    ===  =  ==  =  ==     ===    =
-  =  =  ==  =  ==  ==  =====   =====  =======  ==  =  ==  =  =
-  ==    ==  =  ==  ==  =====    =====  ====    ==  =  ==  =  =
-  ====  ==  =  ==  ==  =  ==  =  ==  =  ==  =  ==  =  ==  =  =
-  ====  ===    ==  ===   ===  =  ===   ====    ==  =  ===    =
-  ============================================================
+  [reluctant]: Execution started: ${workflow.start.format('dd.MM.yyyy HH:mm')} ${cyan}
   ${white}${workflow.manifest.description} ${cyan}~ Version ${workflow.manifest.version} ${white}
 
  --------------------------------------------------------------
@@ -29,7 +19,7 @@ workflow setup {
         // Additional Setup, Copy Files etc.
         //
         //
-        def basedir = "quicksand_${workflow.manifest.version}"
+        def basedir = "reluctant_${workflow.manifest.version}"
         def start = workflow.start.format('yyyyMMdd_HHmmss')
 
         def commandFile = new File("${basedir}/nextflow/${start}_commands.txt")

@@ -17,7 +17,7 @@ workflow substitutions {
         txt = GET_PATTERNS.out.txt
 
         SUMMARIZE_CT(txt)
-        versions = SUMMARIZE_CT.out.versions.first()
+        versions = versions.mix(SUMMARIZE_CT.out.versions.first())
 
         // include the stats in the meta
         bam.combine( SUMMARIZE_CT.out.txt, by:0 )

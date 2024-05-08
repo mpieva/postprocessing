@@ -3,6 +3,7 @@ process GET_AVERAGE_LENGTH {
         'https://depot.galaxyproject.org/singularity/perl:5.32' :
         'quay.io/biocontainers/perl:5.32' }"
     label "process_low"
+    tag "$meta.id"
 
     input:
     tuple val(meta), path(bam)

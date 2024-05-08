@@ -1,12 +1,14 @@
 #!/usr/bin/env nextflow
 
 // include workflows for different executions of the pipeline
-include { setup             } from './workflows/00_setup'
-include { splitbam          } from './workflows/01_splitbam'
-include { splitdir          } from './workflows/01_splitdir'
-include { bamfilter         } from './workflows/02_bamfilter'
-include { substitutions     } from './workflows/03_substitutions'
-include { write_reports     } from './workflows/09_reports.nf'
+include { setup              } from './workflows/00_setup'
+include { splitbam           }  from './workflows/01_splitbam'
+include { splitdir           } from './workflows/01_splitdir'
+include { bamfilter          } from './workflows/02_bamfilter'
+include { substitutions      } from './workflows/03_substitutions'
+include { cond_substitutions } from './workflows/04_conditional_substitutions'
+include { filter_deaminated  } from './workflows/05_filter_deaminated'
+include { write_reports      } from './workflows/09_reports.nf'
 
 //The colors
 red = "\033[0;31m"
@@ -110,9 +112,6 @@ workflow {
     //
 
     //include a meta-file with all fields existing
-    meta = Channel.fromPath("$baseDir/assets/pipeline/meta.tsv").splitCsv(sep:'\t', header:true)
-    bam.combine(meta).map{ m1, bam, meta -> [meta, bam] }.set{ bam }
-
     bam.map {
         [
             it[0] + [
@@ -126,15 +125,31 @@ workflow {
 
     bamfilter( bam )
 
-    bam = bamfilter.out.bam
+    analyzed_bam = bamfilter.out.bam
     ch_versions = ch_versions.mix( bamfilter.out.versions )
 
     //
     // 3. Calculate Subsitutions
     //
 
-    substitutions(bam)
-    bam = substitutions.out.bam
+    substitutions(analyzed_bam)
+    sub_bam = substitutions.out.bam
     ch_versions = ch_versions.mix( substitutions.out.versions )
+
+    //
+    // 4. Calculate conditional substitutions
+    //
+
+    cond_substitutions(analyzed_bam)
+    cond_sub_bam = cond_substitutions.out.bam
+    ch_versions = ch_versions.mix( cond_substitutions.out.versions )
+
+    //
+    // 5. Filter deaminated
+    //
+
+    filter_deaminated(analyzed_bam)
+    filter_bam = filter_deaminated.out.bam
+    ch_versions = ch_versions.mix( filter_deaminated.out.versions )
 
 }

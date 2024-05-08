@@ -1,0 +1,48 @@
+include { FILTER_BAM         } from '../modules/local/perl_filterBAM'
+include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
+include { SAMTOOLS_COUNT     } from '../modules/local/samtools_count'
+
+workflow filter_deaminated {
+    take:
+        bam
+
+    main:
+        //
+        // Filter bam files for damage for conditional substitutions
+        //
+
+        FILTER_BAM(bam)
+
+        filterbam = FILTER_BAM.out.bam
+        versions = FILTER_BAM.out.versions.first()
+
+        GET_AVERAGE_LENGTH(filterbam)
+
+        // save the output to the folder
+        def outdir = "reluctant_${workflow.manifest.version}"
+
+        GET_AVERAGE_LENGTH.out.txt
+            .map{it[1]}
+            .collectFile(name: 'average_fragment_length.L35MQ25.deam.txt', storeDir:"${outdir}/FilterBAM_L35MQ25_3termini")
+        versions = versions.mix(GET_AVERAGE_LENGTH.out.versions.first())
+
+        // save the length to the meta
+        filterbam = filterbam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
+            .map{ meta, bam, txt ->
+                [
+                    meta+['Average_Fragment_Length_Deam555333': txt.text.split(':')[1].trim() as float],
+                    bam
+                ]
+            }
+
+        SAMTOOLS_COUNT(filterbam)
+        filterbam = SAMTOOLS_COUNT.out.bam.map { meta, bam, count ->
+            [ meta+['AncientReads': count as int], bam ]
+        }
+        versions = versions.mix(SAMTOOLS_COUNT.out.versions.first())
+
+
+    emit:
+        bam = filterbam
+        versions = versions
+}

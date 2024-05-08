@@ -1,8 +1,10 @@
 process ANALYZE_BAM {
     label "process_low"
+    tag "$meta.id"
+
 
     input:
-    tuple val(meta), path(bams)
+    tuple val(meta), path("${meta.RG}.bam")
 
     output:
     tuple val(meta), path('*.bam'), emit: bam
@@ -14,7 +16,7 @@ process ANALYZE_BAM {
     #TODO: hardcoded path and hardcoded parameters... needs restructuring of the perlscript
     #TODO: no container at the moment, because it requires that super old samtools version...
 
-    /home/mmeyer/perlscripts/solexa/analysis/analyzeBAM.pl -nof -minlength 35 -qual 25 ${bams}
+    /home/mmeyer/perlscripts/solexa/analysis/analyzeBAM.pl -nof -minlength 35 -qual 25 ${meta.RG}.bam
 
 
     cat <<-END_VERSIONS > versions.yml

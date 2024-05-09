@@ -30,7 +30,7 @@ workflow filter_deaminated {
         filterbam = filterbam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
             .map{ meta, bam, txt ->
                 [
-                    meta+['Average_Fragment_Length_Deam555333': txt.text.split(':')[1].trim() as float],
+                    meta+['average_deam_fragment_length': txt.text.split(':')[1].trim() as float],
                     bam
                 ]
             }
@@ -38,7 +38,7 @@ workflow filter_deaminated {
         // Count the number of deaminated fragments
         SAMTOOLS_COUNT(filterbam)
         filterbam = SAMTOOLS_COUNT.out.bam.map { meta, bam, count ->
-            [ meta+['AncientReads': count as int], bam ]
+            [ meta+['#deam_sequences_left': count as int], bam ]
         }
         // And write to file
         filterbam.collectFile(

@@ -172,14 +172,12 @@ workflow {
         }
         .combine(cond_sub_meta, by: 0)
         .map{ key, meta1, meta2 ->
-            [
-                key,
-                meta1+meta2
-            ]
+            meta1+meta2
         }
 
     //
-    // TODO: Make the reports
+    // 9. Make the reports
     //
+    write_reports(ch_meta, ch_versions)
 
 }

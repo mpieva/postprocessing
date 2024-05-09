@@ -50,7 +50,7 @@ workflow bamfilter {
         bam = bam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
             .map{ meta, bam, txt ->
                 [
-                    meta+['Average_Fragment_Length': txt.text.split(':')[1].trim() as float],
+                    meta+['average_fragment_length': txt.text.split(':')[1].trim() as float],
                     bam
                 ]
             }

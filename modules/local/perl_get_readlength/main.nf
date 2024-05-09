@@ -1,7 +1,4 @@
 process GET_AVERAGE_LENGTH {
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/perl:5.32' :
-        'quay.io/biocontainers/perl:5.32' }"
     label "process_low"
     tag "$meta.id"
 

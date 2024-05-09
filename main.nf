@@ -145,9 +145,19 @@ workflow {
 
     cond_substitutions(analyzed_bam)
     cond_sub_bam = cond_substitutions.out.bam
-    cond_sub_meta = cond_sub_bam.map{ meta, bam ->
-        [['RG': meta.RG], meta]
-    }
+
+    cond_sub_meta = cond_sub_bam
+        .map{ meta, bam ->
+            [['RG': meta.RG], meta]
+        }
+        .groupTuple(by:0) // get deam3 and deam5 back into one entry
+        .map{ key, metas ->
+            [
+                key,
+                metas[0]+metas[1]
+            ]
+        }
+
     ch_versions = ch_versions.mix( cond_substitutions.out.versions )
 
     //

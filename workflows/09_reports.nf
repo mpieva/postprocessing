@@ -24,10 +24,8 @@ workflow write_reports {
     'dups' : ['average_dups', 'singletons','average_fragment_length'].join('\t'),
     'deam' : ['#deam_sequences_left','average_deam_fragment_length',
                 "5'CT", "5'CT_95CI","5'#refC", "3'CT", "3'CT_95CI","3'#refC",
-                "deam5_5'CT", "deam5_5'CT_95CI", "deam5_5'#refC",
                 "deam5_3'CT", "deam5_3'CT_95CI", "deam5_3'#refC",
-                "deam3_5'CT", "deam3_5'CT_95CI", "deam3_5'#refC",
-                "deam3_3'CT", "deam3_3'CT_95CI", "deam3_3'#refC",
+                "deam3_5'CT", "deam3_5'CT_95CI", "deam3_5'#refC"
                 ].join('\t')
     ]
 

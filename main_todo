@@ -1,7 +1,0 @@
-     ch_final.mix( best ).mix( fixed ).set{ch_final}
-
-    //
-    // 9. Write the output files
-    //
-
-    write_reports( ch_final, ch_versions )

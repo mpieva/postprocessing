@@ -35,12 +35,20 @@ workflow filter_deaminated {
                 ]
             }
 
+        // Count the number of deaminated fragments
         SAMTOOLS_COUNT(filterbam)
         filterbam = SAMTOOLS_COUNT.out.bam.map { meta, bam, count ->
             [ meta+['AncientReads': count as int], bam ]
         }
-        versions = versions.mix(SAMTOOLS_COUNT.out.versions.first())
+        // And write to file
+        filterbam.collectFile(
+            name: 'seq_number.L35MQ25.txt',
+            storeDir:"${outdir}/FilterBAM_L35MQ25_3termini",
+            newLine: true) {
+            "${it[0].RG}: ${it[0].AncientReads}"
+        }
 
+        versions = versions.mix(SAMTOOLS_COUNT.out.versions.first())
 
     emit:
         bam = filterbam

@@ -134,6 +134,9 @@ workflow {
 
     substitutions(analyzed_bam)
     sub_bam = substitutions.out.bam
+    sub_meta = sub_bam.map{meta, bam ->
+            [['RG': meta.RG], meta]
+        }
     ch_versions = ch_versions.mix( substitutions.out.versions )
 
     //
@@ -142,6 +145,9 @@ workflow {
 
     cond_substitutions(analyzed_bam)
     cond_sub_bam = cond_substitutions.out.bam
+    cond_sub_meta = cond_sub_bam.map{ meta, bam ->
+        [['RG': meta.RG], meta]
+    }
     ch_versions = ch_versions.mix( cond_substitutions.out.versions )
 
     //
@@ -151,5 +157,29 @@ workflow {
     filter_deaminated(analyzed_bam)
     filter_bam = filter_deaminated.out.bam
     ch_versions = ch_versions.mix( filter_deaminated.out.versions )
+
+    //
+    // 6. Combine all the metas to gather the information
+    //
+
+    ch_meta = filter_bam.map{ [['RG': it[0].RG], it[0]] }
+        .combine(sub_meta, by:0)
+        .map{ key, meta1, meta2 ->
+            [
+                key,
+                meta1+meta2
+            ]
+        }
+        .combine(cond_sub_meta, by: 0)
+        .map{ key, meta1, meta2 ->
+            [
+                key,
+                meta1+meta2
+            ]
+        }
+
+    //
+    // TODO: Make the reports
+    //
 
 }

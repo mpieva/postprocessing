@@ -1,6 +1,8 @@
 This is not yet done...
 
-
+// analyzeBAM
+bamrmdup_cheap                       Cheap computation: skip the consensus calling
+bamrmdup_circular        CHR:LEN     CHR is circular with length LEN
 
 PROFILES:
 The following execution profiles are available (see '-profile' above):

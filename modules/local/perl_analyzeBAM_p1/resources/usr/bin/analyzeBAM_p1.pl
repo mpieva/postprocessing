@@ -3,11 +3,9 @@
 #analyzeBAM.pl
 #written by Matthias Meyer 10.03.2013
 #modified 20240522 by Merlin Szymanski
-
 use strict;
 use Getopt::Long;
 use File::Basename;
-
 
 my $minlength = 0;
 my $maxlength;
@@ -15,12 +13,11 @@ my $minmapqual = 0;
 my $paired;
 
 GetOptions (
-        "minlength=i" => \$minlength,
-	    "maxlength=i" => \$maxlength,
-	    "paired" => \$paired,
-        "quality=i" => \$minmapqual,
+    "minlength=i" => \$minlength,
+    "maxlength=i" => \$maxlength,
+    "paired" => \$paired,
+    "quality=i" => \$minmapqual,
 );
-
 
 my @bamfiles = @ARGV;
 

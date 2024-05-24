@@ -8,14 +8,14 @@ process SAMTOOLS_VIEW {
     tuple val(meta), path(bam)
 
     output:
-    tuple val(meta), path(bam), stdout     , emit: bam
-    tuple val(meta), path("out.sam")       , emit: sam
-    path "versions.yml"                    , emit: versions
+    tuple val(meta), stdout        , emit: stdout, optional: true
+    tuple val(meta), path("*.bam") , emit: bam,    optional: true
+    tuple val(meta), path("*.sam") , emit: sam,    optional: true
+    path "versions.yml"            , emit: versions
 
     script:
     def args = task.ext.args ?: ''
     """
-    touch out.sam
     samtools view $args ${bam}
 
     cat <<-END_VERSIONS > versions.yml

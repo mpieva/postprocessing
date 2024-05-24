@@ -2,6 +2,7 @@ include { SAMTOOLS_VIEW as SAMTOOLS_FILTER } from '../modules/local/samtools_vie
 include { SAMTOOLS_VIEW as BAM_TO_SAM      } from '../modules/local/samtools_view'
 include { BAM_RMDUP }                        from '../modules/local/bam_rmdup'
 include { ANALYZE_BAM_P1 as BAM_STATS }      from '../modules/local/perl_analyzeBAM_p1'
+include { GET_AVERAGE_LENGTH }               from '../modules/local/perl_get_readlength'
 
 
 workflow analyzeBAM {
@@ -9,6 +10,10 @@ workflow analyzeBAM {
         bam
 
     main:
+
+        // Some defs necessary for the writing to disc
+        def outdir = "reluctant_${workflow.manifest.version}"
+        def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
 
         //
         // 0. Convert bam to sam for analyzeBAM
@@ -26,18 +31,23 @@ workflow analyzeBAM {
         BAM_STATS(samfile)
         versions = versions.mix(BAM_STATS.out.versions.first())
 
+        BAM_STATS.out.stats
+            .map{it[1]}
+            .collectFile(name: "summary_stats_${filterstring}.txt", storeDir:"${outdir}/AnalyzeBAM_${filterstring}", keepHeader:true)
+
+
         //
         // 2. Filter the BamFile (parallel)
         //
 
         SAMTOOLS_FILTER(bam)
 
-        bam = SAMTOOLS_FILTER.out.bam.map{
+        filterbam = SAMTOOLS_FILTER.out.bam.map{
             [it[0], it[1]]
         }
 
         // include the stats in the meta
-        bam.combine( BAM_STATS.out.stats, by:0 )
+        filterbam.combine( BAM_STATS.out.stats, by:0 )
         .map{ meta, bam, stats ->
             def vals = stats.splitCsv(sep:'\t', header:true).first() // first because the splitCsv results in [[key:value]]
             [
@@ -45,29 +55,42 @@ workflow analyzeBAM {
                 bam
             ]
         }
-        .set{ bam }
-
-        //save the summary of the summary_stats_file
-        def outdir = "reluctant_${workflow.manifest.version}"
-
-        BAM_STATS.out.stats
-            .map{it[1]}
-            .collectFile(name: 'summary_stats_L35MQ25.txt', storeDir:"${outdir}/AnalyzeBAM_L35MQ25", keepHeader:true)
-            // #TODO: make L35MQ25 variable based on flags
+        .set{ filterbam }
 
         //
         // 3. Run Bam-rmdup
         //
 
-        BAM_RMDUP(bam)
+        BAM_RMDUP(filterbam)
 
-        bam = BAM_RMDUP.out.bam
+        uniqbam = BAM_RMDUP.out.bam
 
         //
         // 4. Get Post-Bam-rmdup stats
         // #TODO
 
+        //
+        // 5. Get average fragment length
+        //
+
+        GET_AVERAGE_LENGTH(uniqbam)
+
+        // save the output to the folder
+        GET_AVERAGE_LENGTH.out.txt
+            .map{it[1]}
+            .collectFile(name: "average_fragment_length.${filterstring}.txt", storeDir:"${outdir}/AnalyzeBAM_${filterstring}")
+        versions = versions.mix(GET_AVERAGE_LENGTH.out.versions.first())
+
+        // save the length to the meta
+        uniqbam = uniqbam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
+            .map{ meta, bam, txt ->
+                [
+                    meta+['average_fragment_length': txt.text.split(':')[1].trim() as float],
+                    bam
+                ]
+            }
+
     emit:
-        bam = bam
+        bam = uniqbam
         versions = versions
 }

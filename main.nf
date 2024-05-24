@@ -2,9 +2,9 @@
 
 // include workflows for different executions of the pipeline
 include { setup              } from './workflows/00_setup'
-include { splitbam           }  from './workflows/01_splitbam'
+include { splitbam           } from './workflows/01_splitbam'
 include { splitdir           } from './workflows/01_splitdir'
-include { bamfilter          } from './workflows/02_bamfilter'
+include { analyzeBAM         } from './workflows/02_analyzeBAM'
 include { substitutions      } from './workflows/03_substitutions'
 include { cond_substitutions } from './workflows/04_conditional_substitutions'
 include { filter_deaminated  } from './workflows/05_filter_deaminated'
@@ -123,10 +123,10 @@ workflow {
     }
     .set{ bam }
 
-    bamfilter( bam )
+    analyzeBAM( bam )
 
-    analyzed_bam = bamfilter.out.bam
-    ch_versions = ch_versions.mix( bamfilter.out.versions )
+    analyzed_bam = analyzeBAM.out.bam
+    ch_versions = ch_versions.mix( analyzeBAM.out.versions )
 
     //
     // 3. Calculate Subsitutions

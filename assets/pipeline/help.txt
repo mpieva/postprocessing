@@ -1,6 +1,12 @@
 This is not yet done...
 
 // analyzeBAM
+
+bamfilter_filterflag     N           Filter by bitwise filterflags (default: 517)
+bamfilter_minlength      N           Minimum length of retained sequences (default: 35)
+bamfilter_maxlength      N           Maximum lenght of retained sequences
+bamfilter_minqual        N           Minimum mapping quality of retained sequences (default: 25)
+
 bamrmdup_cheap                       Cheap computation: skip the consensus calling
 bamrmdup_circular        CHR:LEN     CHR is circular with length LEN
 

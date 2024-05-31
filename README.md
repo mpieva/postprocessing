@@ -15,3 +15,8 @@ The first version of the Shotgun Sequencing pipeline follows Matejas Labfolder E
 #### Pipeline
 
 ![Pipeline overview](assets/pipeline/pipeline_overview.svg)
+
+#### Contributions
+
+- Mateja (Outline)
+- Matthias (AnalyzeBam)

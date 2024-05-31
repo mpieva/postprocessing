@@ -11,12 +11,14 @@ my $minlength = 0;
 my $maxlength;
 my $minmapqual = 0;
 my $paired;
+my $filter = "";
 
 GetOptions (
     "minlength=i" => \$minlength,
     "maxlength=i" => \$maxlength,
     "paired" => \$paired,
     "quality=i" => \$minmapqual,
+    "filter=s" => \$filter
 );
 
 my @bamfiles = @ARGV;
@@ -71,7 +73,7 @@ foreach my $bamfile (@bamfiles) {
 
         # filter unmapped
 	    next if $flag =~ /u/;
-	    next if $chromosome =~ /^phiX/; #disregard phiX reads
+	    next if $chromosome !~ /$filter/; #keep only chromosomes
 	    $counts{$outname}{"filteredLmapped"}++;
 
         # filter quality
@@ -117,6 +119,7 @@ sub help {
 -maxlength      maximum length filter [default OFF]
 -qual           minimum map quality filter [default 0]
 -paired         do not disregard paired reads (but all reverse reads are disregarded in counting)
+-filter         positive filter expression on reference name
 ";
 exit;
 }

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.2 [31.05.2024]
+
+This is a working version of a very basic sequencing postprocessing pipeline.See the README for the BPMN diagram of the pipeline
+
+### Changes
+
+- **Replace Matthias analyzeBAM script** with three fixed steps
+  1. First part of AnalyzeBAM.pl that prints all the counts
+  2. in parallel samtools view for applying all filters at once
+  3. bam-rmdup on the filtered bamfile
+     - Doesnt open the bamfile again after bam-rmdup but parses the bam-rmdup txt output for the post-deduplication stats
+- include a **chromosome filter** to filter by default for X,Y or autosomes
+
 ## v0.1
 
 This is the working version of a basic sequencing postprocessing pipeline.

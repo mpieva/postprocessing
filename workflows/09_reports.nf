@@ -4,6 +4,7 @@ workflow write_reports {
     main:
 
     def basedir = "reluctant_${workflow.manifest.version}"
+    def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
 
     //
     //
@@ -19,8 +20,8 @@ workflow write_reports {
     //
 
     header_map = [
-    'base' : ['raw', '&merged','&filter_passed', '&L35'].join('\t'),
-    'maps' : ['mappedL35', 'mappedL35MQ25','%mappedL35MQ25', 'uniqueL35MQ25'].join('\t'),
+    'base' : ['raw', '&merged','&filter_passed', "&L${params.bamfilter_minlength}"].join('\t'),
+    'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}","%mapped${filterstring}", "unique${filterstring}"].join('\t'),
     'dups' : ['average_dups', 'singletons','average_fragment_length'].join('\t'),
     'deam' : ['#deam_sequences_left','average_deam_fragment_length',
                 "5'CT", "5'CT_95CI","5'#refC", "3'CT", "3'CT_95CI","3'#refC",

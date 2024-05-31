@@ -7,6 +7,9 @@ workflow substitutions {
         bam
 
     main:
+
+        def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
+
         //
         // look at substitution patterns
         //
@@ -35,7 +38,7 @@ workflow substitutions {
 
         SUMMARIZE_CT.out.txt
             .map{it[1]}
-            .collectFile(name: 'CT_substitutions.L35MQ25.txt', storeDir:"${outdir}/Substitution_patterns_L35MQ25", keepHeader:true)
+            .collectFile(name: "CT_substitutions.${filterstring}.txt", storeDir:"${outdir}/Substitution_patterns_${filterstring}", keepHeader:true)
 
     emit:
         bam = bam

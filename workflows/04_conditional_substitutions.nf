@@ -9,6 +9,9 @@ workflow cond_substitutions {
         bam
 
     main:
+
+        def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
+
         //
         // Filter bam files for damage for conditional substitutions
         //
@@ -67,8 +70,8 @@ workflow cond_substitutions {
 
         SUMMARIZE_CT.out.txt
             .collectFile(
-                name: 'conditional_substitutions.L35MQ25.txt',
-                storeDir:"${outdir}/Conditional_substitutions_L35MQ25",
+                name: "conditional_substitutions.${filterstring}.txt",
+                storeDir:"${outdir}/Conditional_substitutions_${filterstring}",
                 keepHeader:true,
                 sort: true
             ) { it[1] }

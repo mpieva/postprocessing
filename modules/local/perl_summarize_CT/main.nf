@@ -6,7 +6,7 @@ process SUMMARIZE_CT {
     tuple val(meta), path(txt)
 
     output:
-    tuple val(meta), path('CT_substitutions.L35MQ25.txt'), emit: txt
+    tuple val(meta), path('CT_substitutions.filteredLMQ.txt'), emit: txt
     path "versions.yml"                                  , emit: versions
 
     script:
@@ -16,7 +16,7 @@ process SUMMARIZE_CT {
     #TODO: no container at the moment, because it requires that super old samtools version...
     #TODO: are the minread and quality necessary (again) ??
 
-    /home/mmeyer/perlscripts/solexa/analysis/summarize_CT_frequencies.pl -screen ${txt} $args > CT_substitutions.L35MQ25.txt
+    /home/mmeyer/perlscripts/solexa/analysis/summarize_CT_frequencies.pl -screen ${txt} $args > CT_substitutions.filteredLMQ.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

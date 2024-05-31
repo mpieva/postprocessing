@@ -7,6 +7,9 @@ workflow filter_deaminated {
         bam
 
     main:
+
+        def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
+
         //
         // Filter bam files for damage for conditional substitutions
         //
@@ -23,7 +26,7 @@ workflow filter_deaminated {
 
         GET_AVERAGE_LENGTH.out.txt
             .map{it[1]}
-            .collectFile(name: 'average_fragment_length.L35MQ25.deam.txt', storeDir:"${outdir}/FilterBAM_L35MQ25_3termini")
+            .collectFile(name: "average_fragment_length.${filterstring}.deam.txt", storeDir:"${outdir}/FilterBAM_${filterstring}_3termini")
         versions = versions.mix(GET_AVERAGE_LENGTH.out.versions.first())
 
         // save the length to the meta
@@ -42,8 +45,8 @@ workflow filter_deaminated {
         }
         // And write to file
         filterbam.collectFile(
-            name: 'seq_number.L35MQ25.txt',
-            storeDir:"${outdir}/FilterBAM_L35MQ25_3termini",
+            name: "seq_number.${filterstring}.txt",
+            storeDir:"${outdir}/FilterBAM_${filterstring}_3termini",
             newLine: true) {
             "${it[0].RG}: ${it[0].AncientReads}"
         }

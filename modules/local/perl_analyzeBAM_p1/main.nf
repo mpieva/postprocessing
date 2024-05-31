@@ -12,8 +12,8 @@ process ANALYZE_BAM_P1 {
 
     output:
     tuple val(meta), path("${meta.RG}.sam"), emit: sam
-    tuple val(meta), path('*.txt'), emit: stats
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path('*.txt')         , emit: stats
+    path "versions.yml"                    , emit: versions
 
     script:
     def args = task.ext.args ?: ''

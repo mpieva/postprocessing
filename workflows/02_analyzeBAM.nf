@@ -67,7 +67,32 @@ workflow analyzeBAM {
 
         //
         // 4. Get Post-Bam-rmdup stats
-        // #TODO
+        //
+
+        uniqbam.combine( BAM_RMDUP.out.txt, by:0 )
+        .map{ meta, bam, stats ->
+            def vals = stats.splitCsv(header:true, sep:"\t").first() // first because the splitCsv results in [[key:value]]
+            // sanitize the bam-rmdup output
+            def tmp = [
+                "in": vals["in"].replace(",",""),
+                "unique":vals["out"].replace(",",""),
+                "singletons":vals["single@MQ20"].replace(",",""),
+            ]
+            // do some additional calculations
+            def rmdup_stats = tmp + ["average_dups": (tmp['in'] as int) / (tmp["unique"] as int) ]
+            [
+                meta+rmdup_stats,
+                bam
+            ]
+        }
+        .map { meta, bam ->
+            // rename the entry to fit the final report
+            [
+                meta + ["unique${filterstring}": meta.unique],
+                bam
+            ]
+        }
+        .set{ uniqbam }
 
         //
         // 5. Get average fragment length

@@ -16,7 +16,16 @@ The first version of the Shotgun Sequencing pipeline follows Matejas Labfolder E
 
 ![Pipeline overview](assets/pipeline/pipeline_overview.svg)
 
+#### Default filters
+
+- minimum-length: 35
+- minimum-quality: 25
+- Only mapped
+- Only merged
+- Vendor OK (Illumina)
+- Mapping to X,Y or Autosome
+
 #### Contributions
 
-- Mateja (Outline)
-- Matthias (AnalyzeBam)
+- Mateja (Outline of pipeline, AverageLength)
+- Matthias (AnalyzeBam, FilterBam, SplitBAM)

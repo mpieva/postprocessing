@@ -1,17 +1,14 @@
-This is not yet done...
+Run the pipeline by providing a directory of demultiplexed BAM files with the --split flag
 
-// analyzeBAM
+nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --split SPLIT
 
-bamfilter_filterflag     N           Filter by bitwise filterflags (default: 517)
-bamfilter_minlength      N           Minimum length of retained sequences (default: 35)
-bamfilter_maxlength      N           Maximum lenght of retained sequences
-bamfilter_minqual        N           Minimum mapping quality of retained sequences (default: 25)
+// analyzeBAM (Yanivs C++ rewrite)
 
-bamrmdup_cheap                       Cheap computation: skip the consensus calling
-bamrmdup_circular        CHR:LEN     CHR is circular with length LEN
+bamfilter_minlength      N        Minimum length of retained sequences (default: 35)
+bamfilter_minqual        N        Minimum mapping quality of retained sequences (default: 25)
+bamfilter_targetfile     PATH     A targetfile for analyzeBAM (not tested)
 
-PROFILES:
-The following execution profiles are available (see '-profile' above):
-  * singularity      run all processes in a singularity container
-  * docker           run all processes in a docker container
-  * debug            dont remove intermediate files after run
+bamrmdup_cheap                    Cheap computation: skip the consensus calling
+bamrmdup_circular        CHR:LEN  CHR is circular with length LEN
+
+The pipeline runs using singularity as container software

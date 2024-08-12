@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.3 [WIP]
+
+Still a working version.See the README for the BPMN diagram of the pipeline
+
+### Changes
+
+- **Replace the analyzeBAM workflow**
+  1. Use Yanivs analyzeBAM rewrite [gitlab](https://vcs.eva.mpg.de/yaniv_swiel/analysebam_cpp)
+  2. This results in a slighly different naming of the columns in the output tables ("merged" instead of "&merged")
+
 ## v0.2 [31.05.2024]
 
 This is a working version of a very basic sequencing postprocessing pipeline.See the README for the BPMN diagram of the pipeline

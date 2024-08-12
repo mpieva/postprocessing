@@ -1,7 +1,8 @@
 ## Ancient DNA preprocessing pipeline
 
 This is a pipeline for the initial processing of sequencing runs that are _not_ metagenomics samples.
-For example the shotgun sequencing of a human bone sample
+
+The files should be already mapped to the human genome!
 
 ### Workflow
 
@@ -16,6 +17,13 @@ The first version of the Shotgun Sequencing pipeline follows Matejas Labfolder E
 
 ![Pipeline overview](assets/pipeline/pipeline_overview.svg)
 
+#### Run the pipeline
+
+```
+nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --split SPLIT
+
+```
+
 #### Default filters
 
 - minimum-length: 35
@@ -28,4 +36,5 @@ The first version of the Shotgun Sequencing pipeline follows Matejas Labfolder E
 #### Contributions
 
 - Mateja (Outline of pipeline, AverageLength)
+- Yaniv (AnalyzeBam)
 - Matthias (AnalyzeBam, FilterBam, SplitBAM)

@@ -19,9 +19,12 @@ workflow write_reports {
     // Write now all the data to files!
     //
 
+    // NOTE: The unique${filterstring} key in the map is stored as Gstrin instead of String, so returning null for the uniqueL35MQ25 column...
+    // I dont have a good workaround yet...
+
     header_map = [
-    'base' : ['raw', '&merged','&filter_passed', "&L${params.bamfilter_minlength}"].join('\t'),
-    'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}","%mapped${filterstring}", "unique${filterstring}"].join('\t'),
+    'base' : ['raw', 'merged','filter_passed', "L${params.bamfilter_minlength}"].join('\t'),
+    'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "unique${filterstring}"].join('\t'),
     'dups' : ['average_dups', 'singletons','average_fragment_length'].join('\t'),
     'deam' : ['#deam_sequences_left','average_deam_fragment_length',
                 "5'CT", "5'CT_95CI","5'#refC", "3'CT", "3'CT_95CI","3'#refC",
@@ -31,7 +34,10 @@ workflow write_reports {
     ]
 
     def getVals = {String header, meta, res=[] ->
-        header.split('\t').each{res << meta[it]}
+        header.split('\t').each{
+            def key = it.trim()
+            res << meta[key]
+            }
         res.join('\t')
     }
 

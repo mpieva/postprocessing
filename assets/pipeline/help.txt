@@ -6,7 +6,8 @@ nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --
 
 bamfilter_minlength      N        Minimum length of retained sequences (default: 35)
 bamfilter_minqual        N        Minimum mapping quality of retained sequences (default: 25)
-bamfilter_targetfile     PATH     A targetfile for analyzeBAM (not tested)
+bamfilter_targetfile     PATH     A targetfile (BED) for analyzeBAM
+bamfilter_keep_vendorfail         Dont filter reads from bamfile that have the "vendor failed" flag set
 
 bamrmdup_cheap                    Cheap computation: skip the consensus calling
 bamrmdup_circular        CHR:LEN  CHR is circular with length LEN

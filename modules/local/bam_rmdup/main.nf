@@ -8,14 +8,14 @@ process BAM_RMDUP {
     tuple val(meta), path(bam)
 
     output:
-    tuple val(meta), path("deduped_${bam}"), emit: bam
-    tuple val(meta), path("rmdup.txt")     , emit: txt
-    path "versions.yml"                    , emit: versions
+    tuple val(meta), path("${meta.RG}.uniq.${meta.filter}.bam") , emit: bam
+    tuple val(meta), path("${meta.RG}.${meta.filter}.rmdup.txt"), emit: txt
+    path "versions.yml"                                         , emit: versions
 
     script:
     def args = task.ext.args ?: ''
     """
-    bam-rmdup $args -o deduped_${bam} ${bam} > rmdup.txt
+    bam-rmdup $args -o  "${meta.RG}.uniq.${meta.filter}.bam" ${bam} > "${meta.RG}.${meta.filter}.rmdup.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

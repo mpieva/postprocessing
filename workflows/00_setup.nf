@@ -19,7 +19,7 @@ workflow setup {
         // Additional Setup, Copy Files etc.
         //
         //
-        def basedir = "reluctant_${workflow.manifest.version}"
+        def basedir = "${params.io_reference}__${params.io_target}__proc${workflow.manifest.version}"
         def start = workflow.start.format('yyyyMMdd_HHmmss')
 
         def commandFile = new File("${basedir}/nextflow/${start}_commands.txt")

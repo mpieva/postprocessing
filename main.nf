@@ -48,9 +48,6 @@ if (params.help){
 //
 //
 
-def outdir = "reluctant_${workflow.manifest.version}"
-
-
 if(params.split && (params.bam || params.rg)){
     log.info get_info_msg("Use: nextflow run mpieva/reluctant {--rg FILE --bam FILE | --split DIR}")
     exit_with_error_msg("ArgumentError", "Too many arguments")
@@ -60,16 +57,16 @@ if(!params.split && !(params.bam && params.rg)){
     exit_with_error_msg("ArgumentError", "Too few arguments")
 }
 
-
 //
 //
 // input Channels
 //
 //
 
-bam        = params.bam      ? file( params.bam, checkIfExists:true) : ""
-by         = params.rg       ? file( params.rg,  checkIfExists:true) : ""
-split      = params.split    ? Channel.fromPath("${params.split}/*",     checkIfExists:true) : ""
+ch_bam        = params.bam                  ? file( params.bam, checkIfExists:true) : ""
+ch_by         = params.rg                   ? file( params.rg,  checkIfExists:true) : ""
+ch_split      = params.split                ? Channel.fromPath("${params.split}/*", checkIfExists:true) : ""
+ch_targetfile = params.bamfilter_targetfile ? Channel.fromPath("${params.bamfilter_targetfile}", checkIfExists:true) : ""
 
 ch_versions = Channel.empty()
 ch_final = Channel.empty()
@@ -93,17 +90,17 @@ workflow {
     // 1. Input Processing ~ Input Parameters
     //
 
-    if (bam) {
-        splitbam( bam,by )
+    if (ch_bam) {
+        splitbam( ch_bam, ch_by )
 
-        bam = splitbam.out.bams
+        ch_bam = splitbam.out.bams
         ch_versions = ch_versions.mix( splitbam.out.versions )
     }
 
     else {
-        splitdir( split )
+        splitdir( ch_split )
 
-        bam = splitdir.out.bams
+        ch_bam = splitdir.out.bams
         ch_versions = ch_versions.mix( splitdir.out.versions )
     }
 
@@ -112,7 +109,7 @@ workflow {
     //
 
     //include a meta-file with all fields existing
-    bam.map {
+    ch_bam.map {
         [
             it[0] + [
                 "id":it[1].baseName.replace("sorted_",""),
@@ -121,20 +118,20 @@ workflow {
             it[1]
         ]
     }
-    .set{ bam }
+    .set{ ch_bam }
 
-    analyzeBAM( bam )
+    analyzeBAM( ch_bam )
 
-    analyzed_bam = analyzeBAM.out.bam
+    ch_analyzed_bam = analyzeBAM.out.bam
     ch_versions = ch_versions.mix( analyzeBAM.out.versions )
 
     //
     // 3. Calculate Subsitutions
     //
 
-    substitutions(analyzed_bam)
-    sub_bam = substitutions.out.bam
-    sub_meta = sub_bam.map{meta, bam ->
+    substitutions(ch_analyzed_bam)
+    ch_sub_bam = substitutions.out.bam
+    ch_sub_meta = ch_sub_bam.map{meta, bam ->
             [['RG': meta.RG], meta]
         }
     ch_versions = ch_versions.mix( substitutions.out.versions )
@@ -143,10 +140,10 @@ workflow {
     // 4. Calculate conditional substitutions
     //
 
-    cond_substitutions(analyzed_bam)
-    cond_sub_bam = cond_substitutions.out.bam
+    cond_substitutions(ch_analyzed_bam)
+    ch_cond_sub_bam = cond_substitutions.out.bam
 
-    cond_sub_meta = cond_sub_bam
+    ch_cond_sub_meta = ch_cond_sub_bam
         .map{ meta, bam ->
             [['RG': meta.RG], meta]
         }
@@ -164,23 +161,23 @@ workflow {
     // 5. Filter deaminated
     //
 
-    filter_deaminated(analyzed_bam)
-    filter_bam = filter_deaminated.out.bam
+    filter_deaminated(ch_analyzed_bam)
+    ch_filter_bam = filter_deaminated.out.bam
     ch_versions = ch_versions.mix( filter_deaminated.out.versions )
 
     //
     // 6. Combine all the metas to gather the information
     //
 
-    ch_meta = filter_bam.map{ [['RG': it[0].RG], it[0]] }
-        .combine(sub_meta, by:0)
+    ch_meta = ch_filter_bam.map{ [['RG': it[0].RG], it[0]] }
+        .combine(ch_sub_meta, by:0)
         .map{ key, meta1, meta2 ->
             [
                 key,
                 meta1+meta2
             ]
         }
-        .combine(cond_sub_meta, by: 0)
+        .combine(ch_cond_sub_meta, by: 0)
         .map{ key, meta1, meta2 ->
             meta1+meta2
         }

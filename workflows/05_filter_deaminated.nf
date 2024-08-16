@@ -9,6 +9,8 @@ workflow filter_deaminated {
     main:
 
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
+        def outdir = "${params.io_reference}__${params.io_target}__proc${workflow.manifest.version}"
+
 
         //
         // Filter bam files for damage for conditional substitutions
@@ -20,9 +22,6 @@ workflow filter_deaminated {
         versions = FILTER_BAM.out.versions.first()
 
         GET_AVERAGE_LENGTH(filterbam)
-
-        // save the output to the folder
-        def outdir = "reluctant_${workflow.manifest.version}"
 
         GET_AVERAGE_LENGTH.out.txt
             .map{it[1]}

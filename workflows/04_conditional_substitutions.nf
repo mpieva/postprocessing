@@ -11,6 +11,8 @@ workflow cond_substitutions {
     main:
 
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
+        def outdir = "${params.io_reference}__${params.io_target}__proc${workflow.manifest.version}"
+
 
         //
         // Filter bam files for damage for conditional substitutions
@@ -64,9 +66,6 @@ workflow cond_substitutions {
                 ]
             }
             .set{ filterbam }
-
-        // save the stats to the dir
-        def outdir = "reluctant_${workflow.manifest.version}"
 
         SUMMARIZE_CT.out.txt
             .collectFile(

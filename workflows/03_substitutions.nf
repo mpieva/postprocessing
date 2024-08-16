@@ -9,6 +9,8 @@ workflow substitutions {
     main:
 
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
+        def outdir = "${params.io_reference}__${params.io_target}__proc${workflow.manifest.version}"
+
 
         //
         // look at substitution patterns
@@ -32,9 +34,6 @@ workflow substitutions {
                 ]
             }
             .set{ bam }
-
-        // save the stats to the dir
-        def outdir = "reluctant_${workflow.manifest.version}"
 
         SUMMARIZE_CT.out.txt
             .map{it[1]}

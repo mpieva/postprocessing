@@ -11,7 +11,7 @@ workflow analyzeBAM {
     main:
 
         // Some defs necessary for the writing to disc
-        def outdir = "reluctant_${workflow.manifest.version}"
+        def outdir = "${params.io_reference}__${params.io_target}__proc${workflow.manifest.version}"
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
 
         bam = bam.map{ meta, bam ->

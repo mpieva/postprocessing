@@ -1,7 +1,6 @@
-include { BAM_RMDUP }                             from '../modules/local/bam_rmdup'
-include { ANALYZE_BAM_CPP as ANALYZE_BAM_CPP_P1 } from '../modules/local/analyzebam_cpp'
-include { ANALYZE_BAM_CPP as ANALYZE_BAM_CPP_P2 } from '../modules/local/analyzebam_cpp'
-include { GET_AVERAGE_LENGTH }                    from '../modules/local/perl_get_readlength'
+include { BAM_RMDUP }          from '../modules/local/bam_rmdup'
+include { ANALYZE_BAM_CPP }    from '../modules/local/analyzebam_cpp'
+include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
 
 
 workflow analyzeBAM {
@@ -11,7 +10,7 @@ workflow analyzeBAM {
     main:
 
         // Some defs necessary for the writing to disc
-        def outdir = "${params.io_reference}__${params.io_target}__proc${workflow.manifest.version}"
+        def outdir = "${params.reference}.${params.target}.proc${workflow.manifest.version}"
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
 
         bam = bam.map{ meta, bam ->
@@ -66,9 +65,9 @@ workflow analyzeBAM {
             def vals = stats.splitCsv(header:true, sep:"\t").first() // first because the splitCsv results in [[key:value]]
             // sanitize the bam-rmdup output
             def tmp = [
-                "in": vals["in"].replace(",",""),
-                "unique":vals["out"].replace(",",""),
-                "singletons":vals["single@MQ20"].replace(",",""),
+                "in": vals["in"].replace(",",""), // corresponds to MappedBam
+                "unique":vals["out"].replace(",",""), // corresponds to UniqueBam
+                "singletons":vals["single@MQ20"].replace(",",""), // corresponds to singletons
             ]
             // do some additional calculations
             def rmdup_stats = tmp + ["average_dups": (tmp['in'] as int) / (tmp["unique"] as int) ]

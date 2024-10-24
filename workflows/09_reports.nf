@@ -3,7 +3,7 @@ workflow write_reports {
     take: ch_versions
     main:
 
-    def basedir = "${params.io_reference}__${params.io_target}__proc${workflow.manifest.version}"
+    def basedir = "${params.reference}.${params.target}.proc${workflow.manifest.version}"
     def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
 
     //

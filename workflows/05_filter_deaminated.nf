@@ -9,7 +9,7 @@ workflow filter_deaminated {
     main:
 
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
-        def outdir = "${params.io_reference}__${params.io_target}__proc${workflow.manifest.version}"
+        def outdir = "${params.reference}.${params.target}.proc${workflow.manifest.version}"
 
 
         //

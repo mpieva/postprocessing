@@ -24,10 +24,10 @@ workflow analyzeBAM {
         // 1. Get all the stats from the Bamfile
         //
 
-        ANALYZE_BAM_CPP_P1(bam, [])
-        versions = ANALYZE_BAM_CPP_P1.out.versions.first()
+        ANALYZE_BAM_CPP(bam, [])
+        versions = ANALYZE_BAM_CPP.out.versions.first()
 
-        ANALYZE_BAM_CPP_P1.out.stats
+        ANALYZE_BAM_CPP.out.stats
             .map{it[1]}
             .collectFile(name: "summary_stats_${filterstring}.txt", storeDir:"${outdir}/AnalyzeBAM_${filterstring}", keepHeader:true)
 
@@ -35,10 +35,10 @@ workflow analyzeBAM {
         // 2. Get the filtered BamFile
         //
 
-        filterbam = ANALYZE_BAM_CPP_P1.out.bam
+        filterbam = ANALYZE_BAM_CPP.out.bam
 
         // include the stats in the meta
-        filterbam.combine( ANALYZE_BAM_CPP_P1.out.stats, by:0 )
+        filterbam.combine( ANALYZE_BAM_CPP.out.stats, by:0 )
         .map{ meta, bam, stats ->
             def vals = stats.splitCsv(sep:'\t', header:true).first() // first because the splitCsv results in [[key:value]]
             [

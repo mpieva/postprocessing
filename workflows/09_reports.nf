@@ -25,7 +25,7 @@ workflow write_reports {
     //
     header_map = [
     'base' : ['raw', 'merged','filter_passed', "L${params.bamfilter_minlength}"].join('\t'),
-    'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "unique${filterstring}", 'average_dups', 'average_fragment_length'].join('\t'),
+    'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "unique${filterstring}",'singletons', 'average_dups', 'average_fragment_length'].join('\t'),
     'deam' : ['#deam_sequences_left','average_deam_fragment_length',
                 "5'CT", "5'CT_95CI","5'#refC", "3'CT", "3'CT_95CI","3'#refC",
                 "deam5_3'CT", "deam5_3'CT_95CI", "deam5_3'#refC",
@@ -36,7 +36,7 @@ workflow write_reports {
     // if the keys in the meta dont match the desired columns, map here the meta keys to the values here...
     //
     value_map = [
-        'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "singletons", 'average_dups', 'average_fragment_length'].join('\t'),
+        'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "unique", "singletons", 'average_dups', 'average_fragment_length'].join('\t'),
     ]
 
     def getVals = {String key, meta, res=[] ->

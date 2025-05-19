@@ -14,7 +14,7 @@ workflow write_reports {
 
     ch_final.map{ meta -> 
         meta + ['panel':params.target_name ]
-    }.view().set{ch_final}
+    }.set{ch_final}
 
     // write the reports to file...
     ch_versions.unique().collectFile(name: 'pipeline_versions.yml', storeDir:"${outdir}/nextflow")

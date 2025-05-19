@@ -5,16 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## v0.3 [WIP]
+## v0.3 [19.05.2025]
 
-Still a working version.See the README for the BPMN diagram of the pipeline
+Use the C++ implementation of analyzeBam (written by Yaniv) for processing
 
 ### Changes
 
 - **Replace the analyzeBAM workflow**
   1. Use Yanivs analyzeBAM rewrite [gitlab](https://vcs.eva.mpg.de/yaniv_swiel/analysebam_cpp)
   2. This results in a slighly different naming of the columns in the output tables ("merged" instead of "&merged")
-  3. include the 'shotgun' profile
+  3. include the 'shotgun' and 'archaicAdmixture' profile
 
 ## v0.2 [31.05.2024]
 

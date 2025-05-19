@@ -14,6 +14,7 @@ Still a working version.See the README for the BPMN diagram of the pipeline
 - **Replace the analyzeBAM workflow**
   1. Use Yanivs analyzeBAM rewrite [gitlab](https://vcs.eva.mpg.de/yaniv_swiel/analysebam_cpp)
   2. This results in a slighly different naming of the columns in the output tables ("merged" instead of "&merged")
+  3. include the 'shotgun' profile
 
 ## v0.2 [31.05.2024]
 

@@ -18,7 +18,7 @@ process ANALYZE_BAM_CPP {
     def target = target ? "-targetfile ${target}" : ''
     """
 
-    analyzeBAM $args -out_folder $target  . ${meta.RG}.bam
+    analyzeBAM $args -out_folder . $target ${meta.RG}.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

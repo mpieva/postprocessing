@@ -35,3 +35,9 @@ shotgun {
     target_name = "shotgun"
     target_file = false
 }
+archaicAdmixture {
+    reference_file = "/mnt/solexa/Genomes/hg19_evan/"
+    reference_name = "hg19_evan"
+    target_name = "archaicAdmixture"
+    target_file = "/mnt/diversity/arev_suemer/kozja/AA/archaicadmixture.bed"
+}

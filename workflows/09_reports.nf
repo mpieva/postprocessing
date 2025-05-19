@@ -13,7 +13,7 @@ workflow write_reports {
     //
 
     ch_final.map{ meta -> 
-        meta + ['panel':params.target_name, "target${filterstring}": meta.target ? meta["target${filterstring}"] : meta["mapped${filterstring}"] ]
+        meta + ['panel':params.target_name ]
     }.view().set{ch_final}
 
     // write the reports to file...
@@ -38,10 +38,10 @@ workflow write_reports {
                 ].join('\t')
     ]
     //
-    // if the keys in the meta dont match the desired columns, map here the meta keys to the values here...
+    // if the keys in the meta dont match the desired columns, map here the meta keys to the values...
     //
     value_map = [
-        'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "panel", "target${filterstring}",
+        'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "panel", "in", // 'in' is what goes into bam-rmdup and its either the number of on-target or the mapped 
         "unique", "singletons", 'average_dups', 'average_fragment_length'].join('\t'),
     ]
 

@@ -6,11 +6,12 @@ include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
 workflow analyzeBAM {
     take:
         bam
+        ch_targetfile
 
     main:
 
         // Some defs necessary for the writing to disc
-        def outdir = "${params.reference}.${params.target}.proc${workflow.manifest.version}"
+        def outdir = "${params.reference_name}.${params.target_name}"
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
 
         bam = bam.map{ meta, bam ->
@@ -24,7 +25,7 @@ workflow analyzeBAM {
         // 1. Get all the stats from the Bamfile
         //
 
-        ANALYZE_BAM_CPP(bam, [])
+        ANALYZE_BAM_CPP(bam, ch_targetfile)
         versions = ANALYZE_BAM_CPP.out.versions.first()
 
         ANALYZE_BAM_CPP.out.stats

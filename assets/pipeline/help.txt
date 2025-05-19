@@ -1,15 +1,37 @@
 Run the pipeline by providing a directory of demultiplexed BAM files with the --split flag
 
-nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --split SPLIT
+(The pipeline runs using singularity as container software)
+
+USAGE:
+
+nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --split SPLIT -profile PROFILE [options]
+
+// pipeline-options
+
+split            PATH   A directory with BAM-files (mapped to the specified reference)
+target_name      NAME   The name of the target for file-system storage (e.g. shotgun, twist)
+target_file      PATH   A targetfile (BED) for analyzeBAM
+reference_name   NAME   The name of the reference for file-system storage (e.g. hg19_evan)
+reference_file   PATH   The path to the reference used for mapping (e.g. /mnt/solexa/Genomes/hg19_evan/), will be used for double-checking the mapping!
 
 // analyzeBAM (Yanivs C++ rewrite)
 
 bamfilter_minlength      N        Minimum length of retained sequences (default: 35)
 bamfilter_minqual        N        Minimum mapping quality of retained sequences (default: 25)
-bamfilter_targetfile     PATH     A targetfile (BED) for analyzeBAM
 bamfilter_keep_vendorfail         Dont filter reads from bamfile that have the "vendor failed" flag set
 
+// bam-rmdup
 bamrmdup_cheap                    Cheap computation: skip the consensus calling
 bamrmdup_circular        CHR:LEN  CHR is circular with length LEN
 
-The pipeline runs using singularity as container software
+
+AVAILABLE PROFILES
+
+Profiles have some parameters already pre-set:
+
+shotgun {
+    reference_file = "/mnt/solexa/Genomes/hg19_evan/"
+    reference_name = "hg19_evan"
+    target_name = "shotgun"
+    target_file = false
+}

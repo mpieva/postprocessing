@@ -9,7 +9,7 @@ workflow substitutions {
     main:
 
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
-        def outdir = "${params.reference}.${params.target}.proc${workflow.manifest.version}"
+        def outdir = "${params.reference_name}.${params.target_name}"
 
 
         //

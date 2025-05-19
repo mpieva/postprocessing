@@ -63,10 +63,10 @@ if(!params.split && !(params.bam && params.rg)){
 //
 //
 
-ch_bam        = params.bam                  ? file( params.bam, checkIfExists:true) : ""
-ch_by         = params.rg                   ? file( params.rg,  checkIfExists:true) : ""
-ch_split      = params.split                ? Channel.fromPath("${params.split}/*", checkIfExists:true) : ""
-ch_targetfile = params.bamfilter_targetfile ? Channel.fromPath("${params.bamfilter_targetfile}", checkIfExists:true) : ""
+ch_bam        = params.bam          ? file( params.bam, checkIfExists:true) : ""
+ch_by         = params.rg           ? file( params.rg,  checkIfExists:true) : ""
+ch_split      = params.split        ? Channel.fromPath("${params.split}/*", checkIfExists:true) : ""
+ch_targetfile = params.target_file  ? Channel.fromPath("${params.target_file}", checkIfExists:true) : []
 
 ch_versions = Channel.empty()
 ch_final = Channel.empty()
@@ -120,7 +120,7 @@ workflow {
     }
     .set{ ch_bam }
 
-    analyzeBAM( ch_bam )
+    analyzeBAM( ch_bam, ch_targetfile )
 
     ch_analyzed_bam = analyzeBAM.out.bam
     ch_versions = ch_versions.mix( analyzeBAM.out.versions )

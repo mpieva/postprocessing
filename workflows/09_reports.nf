@@ -3,7 +3,7 @@ workflow write_reports {
     take: ch_versions
     main:
 
-    def basedir = "${params.reference}.${params.target}.proc${workflow.manifest.version}"
+    def outdir = "${params.reference_name}.${params.target_name}"
     def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
 
     //
@@ -13,7 +13,7 @@ workflow write_reports {
     //
 
     // write the reports to file...
-    ch_versions.unique().collectFile(name: 'pipeline_versions.yml', storeDir:"${basedir}/nextflow")
+    ch_versions.unique().collectFile(name: 'pipeline_versions.yml', storeDir:"${outdir}/nextflow")
 
     //
     // Write now all the data to files!
@@ -60,7 +60,7 @@ workflow write_reports {
         header_map['base'],
         header_map['maps'],
         header_map['deam'],
-        ].join('\t'), storeDir:"${basedir}/", newLine:true, sort:true
+        ].join('\t'), storeDir:"${outdir}/", newLine:true, sort:true
     ){[
         it.RG,
         getVals('base', it),

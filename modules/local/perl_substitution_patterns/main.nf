@@ -16,9 +16,8 @@ process GET_PATTERNS {
     """
     #TODO: hardcoded path and hardcoded parameters... needs restructuring of the perlscript
     #TODO: no container at the moment, because it requires that super old samtools version...
-    #TODO: are the minread and quality necessary (again) ??
 
-    /home/mmeyer/perlscripts/solexa/analysis/substitution_patterns.pl -minread 35 -quality 25 ${bams}
+    /home/mmeyer/perlscripts/solexa/analysis/substitution_patterns.pl $args ${bams}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

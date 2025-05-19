@@ -21,11 +21,25 @@ workflow analyzeBAM {
             ]
         }
 
+        // add to the meta if we have a target or not!
+        ch_analyzebam = bam.combine(ch_targetfile)
+            .map{ meta, bam, target -> 
+                [
+                    meta+['target': target.baseName == 'no_target' ? false : true],
+                    bam,
+                    target
+                ]
+            }
+            .multiMap{ meta, bam, targetfile ->
+                bam: [meta, bam]
+                target: [meta, targetfile]
+            }
+
         //
         // 1. Get all the stats from the Bamfile
         //
 
-        ANALYZE_BAM_CPP(bam, ch_targetfile)
+        ANALYZE_BAM_CPP(ch_analyzebam.bam, ch_analyzebam.target)
         versions = ANALYZE_BAM_CPP.out.versions.first()
 
         ANALYZE_BAM_CPP.out.stats

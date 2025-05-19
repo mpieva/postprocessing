@@ -66,7 +66,7 @@ if(!params.split && !(params.bam && params.rg)){
 ch_bam        = params.bam          ? file( params.bam, checkIfExists:true) : ""
 ch_by         = params.rg           ? file( params.rg,  checkIfExists:true) : ""
 ch_split      = params.split        ? Channel.fromPath("${params.split}/*", checkIfExists:true) : ""
-ch_targetfile = params.target_file  ? Channel.fromPath("${params.target_file}", checkIfExists:true) : []
+ch_targetfile = params.target_file  ? Channel.fromPath("${params.target_file}", checkIfExists:true) : Channel.fromPath("${baseDir}/assets/pipeline/no_target.bed")
 
 ch_versions = Channel.empty()
 ch_final = Channel.empty()

@@ -108,12 +108,15 @@ workflow {
     // 2. Filter the bam files
     //
 
-    //include a meta-file with all fields existing
+    //Take the time to fill the meta-map with some information
     ch_bam.map {
         [
             it[0] + [
                 "id":it[1].baseName.replace("sorted_",""),
                 "RG":it[1].baseName.replace("sorted_",""),
+                "reference":params.reference_name,
+                "reference_file":params.reference_file,
+                'target': params.target_file ? true : false
             ],
             it[1]
         ]

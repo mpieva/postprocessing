@@ -1,5 +1,6 @@
-include { BAM_RMDUP }          from '../modules/local/bam_rmdup'
-include { ANALYZE_BAM_CPP }    from '../modules/local/analyzebam_cpp'
+include { CHECK_HEADER       } from '../modules/local/header_check'
+include { BAM_RMDUP          } from '../modules/local/bam_rmdup'
+include { ANALYZE_BAM_CPP    } from '../modules/local/analyzebam_cpp'
 include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
 
 
@@ -21,15 +22,23 @@ workflow analyzeBAM {
             ]
         }
 
-        // add to the meta if we have a target or not!
-        ch_analyzebam = bam.combine(ch_targetfile)
-            .map{ meta, bam, target -> 
+        //
+        // Header Check
+        //
+
+        CHECK_HEADER(bam)
+
+        echo = CHECK_HEADER.out.echo
+        
+        bam = bam.combine(echo, by:0)
+            .map{ meta, bam, status -> 
                 [
-                    meta+['target': target.baseName == 'no_target' ? false : true],
-                    bam,
-                    target
+                    meta+['header_status':status.strip()],
+                    bam
                 ]
             }
+
+        ch_analyzebam = bam.combine(ch_targetfile)
             .multiMap{ meta, bam, targetfile ->
                 bam: [meta, bam]
                 target: [meta, targetfile]

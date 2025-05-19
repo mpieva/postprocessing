@@ -13,7 +13,9 @@ workflow write_reports {
     //
 
     ch_final.map{ meta -> 
-        meta + ['panel':params.target_name ]
+        meta + [
+            'panel':params.target_name 
+        ]
     }.set{ch_final}
 
     // write the reports to file...
@@ -29,8 +31,10 @@ workflow write_reports {
     //
     header_map = [
     'base' : ['raw', 'merged','filter_passed', "L${params.bamfilter_minlength}"].join('\t'),
-    'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "panel", "target${filterstring}",
-            "unique${filterstring}",'singletons', 'average_dups', 'average_fragment_length'].join('\t'),
+    'maps' : [
+        "reference","reference_check",
+        "mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "panel", "target${filterstring}",
+        "unique${filterstring}",'singletons', 'average_dups', 'average_fragment_length'].join('\t'),
     'deam' : ['#deam_sequences_left','average_deam_fragment_length',
                 "5'CT", "5'CT_95CI","5'#refC", "3'CT", "3'CT_95CI","3'#refC",
                 "deam5_3'CT", "deam5_3'CT_95CI", "deam5_3'#refC",
@@ -41,8 +45,10 @@ workflow write_reports {
     // if the keys in the meta dont match the desired columns, map here the meta keys to the values...
     //
     value_map = [
-        'maps' : ["mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "panel", "in", // 'in' is what goes into bam-rmdup and its either the number of on-target or the mapped 
-        "unique", "singletons", 'average_dups', 'average_fragment_length'].join('\t'),
+        'maps' : [
+            "reference_file","header_status",
+            "mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "panel", "in", // 'in' is what goes into bam-rmdup and its either the number of on-target or the mapped 
+            "unique", "singletons", 'average_dups', 'average_fragment_length'].join('\t'),
     ]
 
     def getVals = {String key, meta, res=[] ->

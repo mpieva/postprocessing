@@ -5,7 +5,7 @@ A nextflow pipeline for the basic post-processing of human shotgun or capture li
 ## Execution
 
 ```
-NXF_VER=24.04.4 nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --split SPLIT -profile PROFILE [OPTIONS]
+NXF_VER=24.04.4 nextflow run mpieva/postprocessing -r v0.5 --split SPLIT -profile PROFILE [OPTIONS]
 
 ```
 ### SPLIT
@@ -23,7 +23,7 @@ Profiles are pre-settings for different use cases. At the moment this contains
 please run 
 
 ```
-nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --help
+nextflow run mpieva/postprocessing -r v0.5 --help
 
 ```
 
@@ -32,11 +32,6 @@ to see all the available profiles and options!
 ## Pipeline
 
 ![Pipeline overview](assets/pipeline/pipeline_overview.svg)
-
-
-
-
-
 
 #### Default filters
 

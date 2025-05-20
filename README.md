@@ -1,41 +1,42 @@
 # Ancient DNA postprocessing pipeline
 
-This is a pipeline for the initial processing of BAM-files that are _not_ metagenomics samples. This currently includes _shotgun_ sequenced data and nuclear _capture_ data (based on a target file).
+A nextflow pipeline for the basic post-processing of human shotgun or capture libraries (_not_ metagenomics samples). See pipeline-overview below.
 
-This pipeline produces only the **most basic** summary-statistics. Files should be already mapped to the correct reference genome!
+## Execution
 
-### Workflow
+```
+NXF_VER=24.04.4 nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --split SPLIT -profile PROFILE [OPTIONS]
 
-The first version of the Shotgun Sequencing pipeline follows Matejas Labfolder Entry.
+```
+### SPLIT
 
-#### Preprocessing
+The pipeline works on a directory of already demultiplexed and mapped BAM-files, provide the directory with the `--split` flag
 
-- The run was mapped to `hg19_evan` with aDNA parameters
-- adapters were trimmed with `leeHom`.
 
-#### Pipeline
+### PROFILE and OPTIONS
+
+Profiles are pre-settings for different use cases. At the moment this contains 
+
+1. The mapping reference (the pipeline does a check if the references match)
+2. The target-file (to filter for on-target reads)
+
+please run 
+
+```
+nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --help
+
+```
+
+to see all the available profiles and options!
+
+## Pipeline
 
 ![Pipeline overview](assets/pipeline/pipeline_overview.svg)
 
-#### Profiles
-
-Profiles are available for different basic-processings and pre-set references/target-files.
-The pipeline includes a basic verification that the references match!
-
-1. Profile `shotgun` 
-
-```
-- Requires mapping to hg19_evan
-- No target-file
-```
 
 
-#### Run the pipeline
 
-```
-nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --split SPLIT -profile PROFILE
 
-```
 
 #### Default filters
 

@@ -31,7 +31,9 @@ workflow setup {
         commandFile << "# User\t${workflow.userName}\n"
         commandFile << "# Date/Time\t${workflow.start.format('yyyy-MM-dd HH:mm:ss')}\n"
         commandFile << "# Git Revision\t${workflow.commitId ?: 'local run'} (${workflow.revision ?: 'No version'})\n"
-        commandFile << "${workflow.commandLine}\n"
+        commandFile << "# Target File: ${params.target_file}\n"
+        commandFile << "# Reference 4 Check: ${params.reference_file}\n"
+        commandFile << "${workflow.commandLine}\n"       
 
         if( workflow.configFiles.size > 1 ){
             // configFiles[0] is the nextflow.config in the repository...

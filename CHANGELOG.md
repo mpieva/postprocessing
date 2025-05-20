@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.4 [20.05.2025]
+
+Cleanup and Consistent file-naming
+
+### Changes
+- include `ontarget` in the filename is target-file is provided
+- fix a few 'null' values in output files
+- include the reference-file name in the final report
+- add a cheap bam-header-check to see if the bam file was actually mapped to the required reference
+
 ## v0.3 [19.05.2025]
 
 Use the C++ implementation of analyzeBam (written by Yaniv) for processing

@@ -8,7 +8,7 @@ workflow setup {
     main:
         // write the commandline down
         log.info """
-  [reluctant]: Execution started: ${workflow.start.format('dd.MM.yyyy HH:mm')} ${cyan}
+  [postprocessing]: Execution started: ${workflow.start.format('dd.MM.yyyy HH:mm')} ${cyan}
   ${white}${workflow.manifest.description} ${cyan}~ Version ${workflow.manifest.version} ${white}
 
  --------------------------------------------------------------

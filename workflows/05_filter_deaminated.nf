@@ -47,7 +47,7 @@ workflow filter_deaminated {
             name: "seq_number.${filterstring}.txt",
             storeDir:"${outdir}/FilterBAM_${filterstring}_3termini",
             newLine: true) {
-            "${it[0].RG}: ${it[0].AncientReads}"
+            "${it[0].RG}: ${it[0]["#deam_sequences_left"]}"
         }
 
         versions = versions.mix(SAMTOOLS_COUNT.out.versions.first())

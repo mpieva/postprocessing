@@ -18,14 +18,14 @@ yellow = "\033[0;33m"
 // Define some functions
 
 def exit_with_error_msg(error, text){
-    println "[reluctant]: ${red}${error}: ${text}${white}"
+    println "[postprocessing]: ${red}${error}: ${text}${white}"
     exit 0
 }
 def get_warn_msg(text){
-    return "[reluctant]: ${yellow}(WARN): ${text}${white}"
+    return "[postprocessing]: ${yellow}(WARN): ${text}${white}"
 }
 def get_info_msg(text){
-    return "[reluctant]: ${text}"
+    return "[postprocessing]: ${text}"
 }
 def exit_missing_required(flag){
     exit_with_error_msg("ArgumentError", "missing required argument ${flag}")
@@ -49,11 +49,11 @@ if (params.help){
 //
 
 if(params.split && (params.bam || params.rg)){
-    log.info get_info_msg("Use: nextflow run mpieva/reluctant {--rg FILE --bam FILE | --split DIR}")
+    log.info get_info_msg("Use: nextflow run mpieva/postprocessing {--rg FILE --bam FILE | --split DIR}")
     exit_with_error_msg("ArgumentError", "Too many arguments")
 }
 if(!params.split && !(params.bam && params.rg)){
-    log.info get_info_msg("Use: nextflow run mpieva/reluctant {--rg FILE --bam FILE | --split DIR}")
+    log.info get_info_msg("Use: nextflow run mpieva/postprocessing {--rg FILE --bam FILE | --split DIR}")
     exit_with_error_msg("ArgumentError", "Too few arguments")
 }
 
@@ -116,7 +116,8 @@ workflow {
                 "RG":it[1].baseName.replace("sorted_",""),
                 "reference":params.reference_name,
                 "reference_file":params.reference_file,
-                'target': params.target_file ? true : false
+                'target': params.target_file ? true : false,
+                'ontarget': params.target_file ? '.ontarget' : ''
             ],
             it[1]
         ]

@@ -81,6 +81,6 @@ workflow write_reports {
         ].join('\t')
     }
     .subscribe {
-        println "[reluctant]: Summary reports saved"
+        println "[postprocessing]: Summary reports saved"
     }
 }

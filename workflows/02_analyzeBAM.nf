@@ -1,4 +1,5 @@
 include { CHECK_HEADER       } from '../modules/local/header_check'
+include { SAMTOOLS_INDEX     } from '../modules/local/samtools_index' 
 include { BAM_RMDUP          } from '../modules/local/bam_rmdup'
 include { ANALYZE_BAM_CPP    } from '../modules/local/analyzebam_cpp'
 include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
@@ -37,18 +38,21 @@ workflow analyzeBAM {
                     bam
                 ]
             }
-
+        
         ch_analyzebam = bam.combine(ch_targetfile)
             .multiMap{ meta, bam, targetfile ->
                 bam: [meta, bam]
                 target: [meta, targetfile]
             }
 
+        SAMTOOLS_INDEX(ch_analyzebam.bam)
+        indexed_bam = SAMTOOLS_INDEX.out.indexed
+
         //
         // 1. Get all the stats from the Bamfile
         //
 
-        ANALYZE_BAM_CPP(ch_analyzebam.bam, ch_analyzebam.target)
+        ANALYZE_BAM_CPP(indexed_bam, ch_analyzebam.target)
         versions = ANALYZE_BAM_CPP.out.versions.first()
 
         ANALYZE_BAM_CPP.out.stats

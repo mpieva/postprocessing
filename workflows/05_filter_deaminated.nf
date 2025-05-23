@@ -1,4 +1,4 @@
-include { FILTER_BAM         } from '../modules/local/perl_filterBAM'
+include { FILTER_BAM         } from '../modules/local/filterbam_cpp'
 include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
 include { SAMTOOLS_COUNT     } from '../modules/local/samtools_count'
 

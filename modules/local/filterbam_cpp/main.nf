@@ -12,15 +12,11 @@ process FILTER_BAM {
     script:
     def args = task.ext.args ?: ''
     """
-    #TODO: hardcoded path and hardcoded parameters... needs restructuring of the perlscript
-    #TODO: no container at the moment, because it requires that super old samtools version...
-
-    /home/mmeyer/perlscripts/solexa/analysis/filterBAM.pl $args ${bams}
+    filterBAM $args ${bams}
 
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        filterBAM.pl: Live Version from Matthias home directory
-    END_VERSIONS
+        filterBAM: \$(filterBAM --version)
     """
 }

@@ -4,7 +4,7 @@ process ANALYZE_BAM_CPP {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path("${meta.RG}.bam")
+    tuple val(meta), path("${meta.RG}.bam"), path("${meta.RG}.bai")
     tuple val(meta), path("sites.bed")
 
     output:
@@ -17,7 +17,6 @@ process ANALYZE_BAM_CPP {
     def args = task.ext.args ?: ''
     def target = meta.target ? "-targetfile sites.bed" : ''
     """
-
     analyzeBAM $args -out_folder . $target ${meta.RG}.bam
 
     cat <<-END_VERSIONS > versions.yml

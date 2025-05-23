@@ -1,5 +1,5 @@
-include { FILTER_BAM as FILTER_BAM_DEAM3  } from '../modules/local/perl_filterBAM'
-include { FILTER_BAM as FILTER_BAM_DEAM5  } from '../modules/local/perl_filterBAM'
+include { FILTER_BAM as FILTER_BAM_DEAM3  } from '../modules/local/filterbam_cpp'
+include { FILTER_BAM as FILTER_BAM_DEAM5  } from '../modules/local/filterbam_cpp'
 include { GET_PATTERNS } from '../modules/local/perl_substitution_patterns'
 include { SUMMARIZE_CT } from '../modules/local/perl_summarize_CT'
 

@@ -1,0 +1,5 @@
+until containerization of Yanivs scripts, update them by
+
+1. Pulling the most recent version from github
+2. run `make`
+3. copy the binaries (analyzeBAM, filterBAM and deamBAM) into the respective modules

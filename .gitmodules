@@ -1,3 +1,0 @@
-[submodule "modules/local/analyzebam_cpp/resources/usr/analyzebam_cpp"]
-	path = modules/local/analyzebam_cpp/resources/usr/analyzebam_cpp
-	url = https://vcs.eva.mpg.de/yaniv_swiel/analysebam_cpp

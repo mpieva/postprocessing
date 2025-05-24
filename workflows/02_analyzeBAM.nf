@@ -3,6 +3,7 @@ include { SAMTOOLS_INDEX     } from '../modules/local/samtools_index'
 include { BAM_RMDUP          } from '../modules/local/bam_rmdup'
 include { ANALYZE_BAM_CPP    } from '../modules/local/analyzebam_cpp'
 include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
+include { PLOT_READLENGTH    } from '../modules/local/pandas_plot_length'  
 
 
 workflow analyzeBAM {
@@ -58,6 +59,9 @@ workflow analyzeBAM {
         ANALYZE_BAM_CPP.out.stats
             .map{it[1]}
             .collectFile(name: "summary_stats_${filterstring}.txt", storeDir:"${outdir}/AnalyzeBAM_${filterstring}", keepHeader:true)
+
+        
+        PLOT_READLENGTH(ANALYZE_BAM_CPP.out.tsv)
 
         //
         // 2. Get the filtered BamFile

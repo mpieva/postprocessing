@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.5 [WIP]
+
+### Changes
+- replace filterBam and subsitution pattern perl-scripts with Yanivs C++ versions
+- plot read-length distribution after analyzeBAM
+
 ## v0.4 [20.05.2025]
 
 Cleanup and Consistent file-naming

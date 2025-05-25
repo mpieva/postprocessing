@@ -6,7 +6,7 @@ process DEAM_BAM_CPP {
     tuple val(meta), path(bam), path(bai)
 
     output:
-    path("*.txt")                      , emit: txt
+    tuple val(meta), path("*.txt")     , emit: txt
     path "versions.yml"                , emit: versions
     tuple val(meta), path('total.tsv') , emit: tsv
 

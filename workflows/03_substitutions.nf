@@ -1,6 +1,7 @@
 include { DEAM_BAM_CPP   } from '../modules/local/deam_bam_cpp'
 include { SAMTOOLS_CALMD } from '../modules/local/samtools_calmd'
 include { SAMTOOLS_INDEX } from '../modules/local/samtools_index'
+include { PLOT_DEAM      } from '../modules/local/pandas_plot_deam'
 
 workflow substitutions {
     take:
@@ -31,6 +32,14 @@ workflow substitutions {
 
         ch_calmd_indexed = SAMTOOLS_INDEX.out.indexed
 
+        ch_calmd_indexed = ch_calmd_indexed.map{meta, bam, bai ->
+            [
+                meta+['filename':bam.baseName],
+                bam,
+                bai
+            ]
+        }
+
         //
         // Then, Yanivs CPP-script
         //
@@ -41,6 +50,12 @@ workflow substitutions {
             meta+stats.splitCsv(sep:'\t', header:true).first()
         }
         versions = DEAM_BAM_CPP.out.versions
+
+        //
+        // Plot Patterns
+        //
+
+        PLOT_DEAM(DEAM_BAM_CPP.out.txt)
 
 
     emit:

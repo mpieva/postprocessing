@@ -5,12 +5,12 @@ process BAM_RMDUP {
     label 'local'
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
 
     output:
-    tuple val(meta), path("${meta.RG}${meta.ontarget}.uniq.${meta.filter}.bam") , emit: bam
-    tuple val(meta), path("${meta.RG}.${meta.filter}.rmdup.txt")                , emit: txt
-    path "versions.yml"                                                         , emit: versions
+    tuple val(meta), path("${meta.RG}${meta.ontarget}.uniq.${meta.filter}.bam"), path(bai) , emit: bam
+    tuple val(meta), path("${meta.RG}.${meta.filter}.rmdup.txt")                           , emit: txt
+    path "versions.yml"                                                                    , emit: versions
 
     script:
     def args = task.ext.args ?: ''

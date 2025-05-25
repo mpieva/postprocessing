@@ -71,11 +71,12 @@ workflow analyzeBAM {
 
         // include the stats in the meta
         filterbam.combine( ANALYZE_BAM_CPP.out.stats, by:0 )
-        .map{ meta, bam, stats ->
+        .map{ meta, bam, bai, stats ->
             def vals = stats.splitCsv(sep:'\t', header:true).first() // first because the splitCsv results in [[key:value]]
             [
                 meta+vals,
-                bam
+                bam,
+                bai
             ]
         }
         .set{ filterbam }
@@ -93,7 +94,7 @@ workflow analyzeBAM {
         //
 
         uniqbam.combine( BAM_RMDUP.out.txt, by:0 )
-        .map{ meta, bam, stats ->
+        .map{ meta, bam, bai, stats ->
             def vals = stats.splitCsv(header:true, sep:"\t").first() // first because the splitCsv results in [[key:value]]
             // sanitize the bam-rmdup output
             def tmp = [
@@ -105,7 +106,8 @@ workflow analyzeBAM {
             def rmdup_stats = tmp + ["average_dups": (tmp['in'] as int) / (tmp["unique"] as int) ]
             [
                 meta+rmdup_stats,
-                bam
+                bam,
+                bai
             ]
         }
         .set{ uniqbam }
@@ -124,10 +126,11 @@ workflow analyzeBAM {
 
         // save the length to the meta
         uniqbam = uniqbam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
-            .map{ meta, bam, txt ->
+            .map{ meta, bam, bai, txt ->
                 [
                     meta+['average_fragment_length': txt.text.split(':')[1].trim() as float],
-                    bam
+                    bam,
+                    bai
                 ]
             }
 

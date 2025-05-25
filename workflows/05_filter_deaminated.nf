@@ -30,10 +30,10 @@ workflow filter_deaminated {
 
         // save the length to the meta
         filterbam = filterbam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
-            .map{ meta, bam, txt ->
+            .map{ meta, bam, bai, txt ->
                 [
                     meta+['average_deam_fragment_length': txt.text.split(':')[1].trim() as float],
-                    bam
+                    bam,
                 ]
             }
 

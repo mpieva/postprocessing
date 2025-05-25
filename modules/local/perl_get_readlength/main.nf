@@ -3,7 +3,7 @@ process GET_AVERAGE_LENGTH {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
 
     output:
     tuple val(meta), path("${meta.RG}.average_fragment_length.filteredLMQ.txt"), emit: txt

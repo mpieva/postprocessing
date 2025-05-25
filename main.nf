@@ -6,7 +6,6 @@ include { splitbam           } from './workflows/01_splitbam'
 include { splitdir           } from './workflows/01_splitdir'
 include { analyzeBAM         } from './workflows/02_analyzeBAM'
 include { substitutions      } from './workflows/03_substitutions'
-include { cond_substitutions } from './workflows/04_conditional_substitutions'
 include { filter_deaminated  } from './workflows/05_filter_deaminated'
 include { write_reports      } from './workflows/09_reports.nf'
 
@@ -63,10 +62,11 @@ if(!params.split && !(params.bam && params.rg)){
 //
 //
 
-ch_bam        = params.bam          ? file( params.bam, checkIfExists:true) : ""
-ch_by         = params.rg           ? file( params.rg,  checkIfExists:true) : ""
-ch_split      = params.split        ? Channel.fromPath("${params.split}/*", checkIfExists:true) : ""
-ch_targetfile = params.target_file  ? Channel.fromPath("${params.target_file}", checkIfExists:true) : Channel.fromPath("${baseDir}/assets/pipeline/no_target.bed")
+ch_bam        = params.bam            ? file( params.bam, checkIfExists:true) : ""
+ch_by         = params.rg             ? file( params.rg,  checkIfExists:true) : ""
+ch_split      = params.split          ? Channel.fromPath("${params.split}/*", checkIfExists:true) : ""
+ch_targetfile = params.target_file    ? Channel.fromPath("${params.target_file}", checkIfExists:true) : Channel.fromPath("${baseDir}/assets/pipeline/no_target.bed")
+ch_reference  = Channel.fromPath("${params.reference_file}", checkIfExists:true) 
 
 ch_versions = Channel.empty()
 ch_final = Channel.empty()
@@ -133,33 +133,12 @@ workflow {
     // 3. Calculate Subsitutions
     //
 
-    substitutions(ch_analyzed_bam)
-    ch_sub_bam = substitutions.out.bam
-    ch_sub_meta = ch_sub_bam.map{meta, bam ->
-            [['RG': meta.RG], meta]
-        }
-    ch_versions = ch_versions.mix( substitutions.out.versions )
-
-    //
-    // 4. Calculate conditional substitutions
-    //
-
-    cond_substitutions(ch_analyzed_bam)
-    ch_cond_sub_bam = cond_substitutions.out.bam
-
-    ch_cond_sub_meta = ch_cond_sub_bam
-        .map{ meta, bam ->
-            [['RG': meta.RG], meta]
-        }
-        .groupTuple(by:0) // get deam3 and deam5 back into one entry
-        .map{ key, metas ->
-            [
-                key,
-                metas[0]+metas[1]
-            ]
-        }
-
-    ch_versions = ch_versions.mix( cond_substitutions.out.versions )
+    substitutions(ch_analyzed_bam, ch_reference)
+    //ch_sub_bam = substitutions.out.bam
+    ch_sub_meta = substitutions.out.meta.map{ meta ->
+        [['RG':meta.RG], meta]
+    }
+    //ch_versions = ch_versions.mix( substitutions.out.versions )
 
     //
     // 5. Filter deaminated
@@ -174,21 +153,15 @@ workflow {
     //
 
     ch_meta = ch_filter_bam.map{ [['RG': it[0].RG], it[0]] }
-        .combine(ch_sub_meta, by:0)
-        .map{ key, meta1, meta2 ->
-            [
-                key,
-                meta1+meta2
-            ]
-        }
-        .combine(ch_cond_sub_meta, by: 0)
-        .map{ key, meta1, meta2 ->
+       .combine(ch_sub_meta, by:0)
+       .map{ key, meta1, meta2 ->
             meta1+meta2
         }
 
     //
     // 9. Make the reports
     //
+
     write_reports(ch_meta, ch_versions)
 
 }

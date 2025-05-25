@@ -1,45 +1,49 @@
-include { GET_PATTERNS }  from '../modules/local/perl_substitution_patterns'
-include { SUMMARIZE_CT }  from '../modules/local/perl_summarize_CT'
-
+include { DEAM_BAM_CPP   } from '../modules/local/deam_bam_cpp'
+include { SAMTOOLS_CALMD } from '../modules/local/samtools_calmd'
+include { SAMTOOLS_INDEX } from '../modules/local/samtools_index'
 
 workflow substitutions {
     take:
         bam
+        reference
 
     main:
 
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
         def outdir = "${params.reference_name}.${params.target_name}"
 
+        //
+        // Fist, fix MD-tag
+        //
+        
+        ch_bam = bam.combine(reference).map{ meta, bam, bai, fa ->
+            [meta, bam, fa]
+        }
+
+        SAMTOOLS_CALMD(ch_bam)
+        ch_calmd_bam = SAMTOOLS_CALMD.out.bam
 
         //
-        // look at substitution patterns
+        // Then, index fasta again
         //
 
-        GET_PATTERNS(bam)
+        SAMTOOLS_INDEX(ch_calmd_bam)
 
-        versions = GET_PATTERNS.out.versions.first()
-        txt = GET_PATTERNS.out.txt
+        ch_calmd_indexed = SAMTOOLS_INDEX.out.indexed
 
-        SUMMARIZE_CT(txt)
-        versions = versions.mix(SUMMARIZE_CT.out.versions.first())
+        //
+        // Then, Yanivs CPP-script
+        //
 
-        // include the stats in the meta
-        bam.combine( SUMMARIZE_CT.out.txt, by:0 )
-            .map{ meta, bam, stats ->
-                def vals = stats.splitCsv(sep:'\t', header:true).first() // first because the splitCsv results in [[key:value]]
-                [
-                    meta+vals,
-                    bam
-                ]
-            }
-            .set{ bam }
+        DEAM_BAM_CPP(ch_calmd_indexed)
+        
+        deam_stats = DEAM_BAM_CPP.out.tsv.map{meta, stats ->
+            meta+stats.splitCsv(sep:'\t', header:true).first()
+        }
+        versions = DEAM_BAM_CPP.out.versions
 
-        SUMMARIZE_CT.out.txt
-            .map{it[1]}
-            .collectFile(name: "CT_substitutions.${filterstring}.txt", storeDir:"${outdir}/Substitution_patterns_${filterstring}", keepHeader:true)
 
     emit:
-        bam = bam
+        meta = deam_stats
         versions = versions
 }

@@ -36,9 +36,8 @@ workflow write_reports {
         "mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "panel", "target${filterstring}",
         "unique${filterstring}",'singletons', 'average_dups', 'average_fragment_length'].join('\t'),
     'deam' : ['#deam_sequences_left','average_deam_fragment_length',
-                "5'CT", "5'CT_95CI","5'#refC", "3'CT", "3'CT_95CI","3'#refC",
-                "deam5_3'CT", "deam5_3'CT_95CI", "deam5_3'#refC",
-                "deam3_5'CT", "deam3_5'CT_95CI", "deam3_5'#refC"
+                "5'CT", "5'CT_95CI","5'#refC","cond5'CT", "cond5'CT_95CI", "cond5'#refC", 
+                "3'CT", "3'CT_95CI","3'#refC","cond3'CT", "cond3'CT_95CI", "cond3'#refC"
                 ].join('\t')
     ]
     //

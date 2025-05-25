@@ -8,7 +8,7 @@ process ANALYZE_BAM_CPP {
     tuple val(meta), path("sites.bed")
 
     output:
-    tuple val(meta), path("${meta.RG}*${meta.filter}.bam")                          , emit: bam
+    tuple val(meta), path("${meta.RG}*${meta.filter}.bam"), path("${meta.RG}.bai")  , emit: bam
     tuple val(meta), path("summary_stats.${meta.RG}*${meta.filter}.txt")            , emit: stats
     tuple val(meta), path("read_length_distribution.${meta.RG}*${meta.filter}.tsv") , emit: tsv // read-length-distribution
     path "versions.yml"                                                             , emit: versions

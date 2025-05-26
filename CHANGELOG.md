@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changes
 - replace filterBam and subsitution pattern perl-scripts with Yanivs C++ versions
 - plot read-length distribution after analyzeBAM
+- plot deamination patterns by read-length
 
 ## v0.4 [20.05.2025]
 

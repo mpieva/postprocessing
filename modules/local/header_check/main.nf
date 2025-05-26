@@ -12,7 +12,7 @@ process CHECK_HEADER {
 
     script:
     """
-    if samtools view -H ${bam} | grep -q ${meta.reference_file};
+    if samtools view -H ${bam} | grep -q ${meta.reference}/;
         then echo "Yes";
         else echo "No";
     fi

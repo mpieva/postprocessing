@@ -27,14 +27,20 @@ set with -profile (only one dash)
 Profiles have some parameters already pre-set:
 
 shotgun {
-    reference_file = "/mnt/solexa/Genomes/hg19_evan/"
-    reference_name = "hg19_evan"
-    target_name = "shotgun"
-    target_file = false
+    params.reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
+    params.reference_name = "hg19_evan"
+    params.target_name = "shotgun"
+    params.target_file = false
 }
-archaicAdmixture {
-    reference_file = "/mnt/solexa/Genomes/hg19_evan/"
-    reference_name = "hg19_evan"
-    target_name = "archaicAdmixture"
-    target_file = "/mnt/diversity/arev_suemer/kozja/AA/archaicadmixture.bed"
+AA108_AA115_archaicAdmixture {
+    params.reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
+    params.reference_name = "hg19_evan"
+    params.target_name = "AA108_AA115_archaicAdmixture"
+    params.target_file = "/home/public/AncientDNA/probe_designs/AA108-115_archaic_admixture/Archaic.align.noN.sorted.bed"
+}
+Reich_1240k {
+    params.reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
+    params.reference_name = "hg19_evan"
+    params.target_name = "Reich_1240k"
+    params.target_file = "/mnt/archgen/Reference_Genomes/Human/hs37d5/SNPCapBEDs/1240K.pos.list_hs37d5.0based.bed"
 }

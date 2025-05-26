@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## v0.5 [WIP]
+## v0.5 [26.05.2025]
 
 ### Changes
 - replace filterBam and subsitution pattern perl-scripts with Yanivs C++ versions
 - plot read-length distribution after analyzeBAM
 - plot deamination patterns by read-length
+- update profiles (Reich_1240k)
 
 ## v0.4 [20.05.2025]
 

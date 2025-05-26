@@ -31,7 +31,7 @@ to see all the available profiles and options!
 
 ## Pipeline
 
-![Pipeline overview](assets/pipeline/pipeline_overview.svg)
+![Pipeline overview](assets/pipeline/postprocessing_pipeline_v0.5.svg)
 
 #### Default filters
 

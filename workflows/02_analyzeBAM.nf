@@ -8,7 +8,7 @@ include { PLOT_READLENGTH    } from '../modules/local/pandas_plot_length'
 
 workflow analyzeBAM {
     take:
-        bam
+        ch_bam
         ch_targetfile
 
     main:
@@ -17,44 +17,46 @@ workflow analyzeBAM {
         def outdir = "${params.reference_name}.${params.target_name}"
         def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
 
-        bam = bam.map{ meta, bam ->
+        ch_bam.map{ meta, bam ->
             [
                 meta + ['filter':filterstring],
                 bam
             ]
         }
+        .set{ ch_bam }
 
         //
         // Header Check
         //
 
-        CHECK_HEADER(bam)
+        CHECK_HEADER(ch_bam)
 
         echo = CHECK_HEADER.out.echo
         
-        bam = bam.combine(echo, by:0)
+        ch_bam.combine(echo, by:0)
             .map{ meta, bam, status -> 
                 [
                     meta+['header_status':status.strip()],
                     bam
                 ]
             }
+            .set{ ch_bam }
         
-        ch_analyzebam = bam.combine(ch_targetfile)
+        ch_analyzebam = ch_bam.combine(ch_targetfile)
             .multiMap{ meta, bam, targetfile ->
                 bam: [meta, bam]
-                target: [meta, targetfile]
+                target: targetfile
             }
 
         SAMTOOLS_INDEX(ch_analyzebam.bam)
-        indexed_bam = SAMTOOLS_INDEX.out.indexed
+        ch_indexed_bam = SAMTOOLS_INDEX.out.indexed
 
         //
         // 1. Get all the stats from the Bamfile
         //
 
-        ANALYZE_BAM_CPP(indexed_bam, ch_analyzebam.target)
-        versions = ANALYZE_BAM_CPP.out.versions.first()
+        ANALYZE_BAM_CPP(ch_indexed_bam, ch_analyzebam.target)
+        ch_versions = ANALYZE_BAM_CPP.out.versions.first()
 
         ANALYZE_BAM_CPP.out.stats
             .map{it[1]}
@@ -67,10 +69,10 @@ workflow analyzeBAM {
         // 2. Get the filtered BamFile
         //
 
-        filterbam = ANALYZE_BAM_CPP.out.bam
+        ch_filterbam = ANALYZE_BAM_CPP.out.bam
 
         // include the stats in the meta
-        filterbam.combine( ANALYZE_BAM_CPP.out.stats, by:0 )
+        ch_filterbam.combine( ANALYZE_BAM_CPP.out.stats, by:0 )
         .map{ meta, bam, bai, stats ->
             def vals = stats.splitCsv(sep:'\t', header:true).first() // first because the splitCsv results in [[key:value]]
             [
@@ -79,21 +81,21 @@ workflow analyzeBAM {
                 bai
             ]
         }
-        .set{ filterbam }
+        .set{ ch_filterbam }
 
         //
         // 3. Run Bam-rmdup
         //
 
-        BAM_RMDUP(filterbam)
+        BAM_RMDUP(ch_filterbam)
 
-        uniqbam = BAM_RMDUP.out.bam
+        ch_uniqbam = BAM_RMDUP.out.bam
 
         //
         // 4. Get Post-Bam-rmdup stats
         //
 
-        uniqbam.combine( BAM_RMDUP.out.txt, by:0 )
+        ch_uniqbam.combine( BAM_RMDUP.out.txt, by:0 )
         .map{ meta, bam, bai, stats ->
             def vals = stats.splitCsv(header:true, sep:"\t").first() // first because the splitCsv results in [[key:value]]
             // sanitize the bam-rmdup output
@@ -110,22 +112,22 @@ workflow analyzeBAM {
                 bai
             ]
         }
-        .set{ uniqbam }
+        .set{ ch_uniqbam }
 
         //
         // 5. Get average fragment length
         //
 
-        GET_AVERAGE_LENGTH(uniqbam)
+        GET_AVERAGE_LENGTH(ch_uniqbam)
 
         // save the output to the folder
         GET_AVERAGE_LENGTH.out.txt
             .map{it[1]}
             .collectFile(name: "average_fragment_length.${filterstring}.txt", storeDir:"${outdir}/AnalyzeBAM_${filterstring}")
-        versions = versions.mix(GET_AVERAGE_LENGTH.out.versions.first())
+        ch_versions = ch_versions.mix(GET_AVERAGE_LENGTH.out.versions.first())
 
         // save the length to the meta
-        uniqbam = uniqbam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
+        ch_uniqbam = ch_uniqbam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
             .map{ meta, bam, bai, txt ->
                 [
                     meta+['average_fragment_length': txt.text.split(':')[1].trim() as float],
@@ -135,6 +137,6 @@ workflow analyzeBAM {
             }
 
     emit:
-        bam = uniqbam
-        versions = versions
+        bam = ch_uniqbam
+        versions = ch_versions
 }

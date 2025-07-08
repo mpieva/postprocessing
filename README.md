@@ -59,18 +59,26 @@ shotgun {
   target_file    = false
 }
 AA108_AA115_archaicAdmixture {
+  // Reference: Fu et al, 2015 (An early modern human from Romania with a recent Neanderthal ancestor), Panel 4
   reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
   reference_name = "hg19_evan"
   target_name    = "AA108_AA115_archaicAdmixture"
   target_file    = "/home/public/AncientDNA/probe_designs/AA108-115_archaic_admixture/Archaic.align.noN.sorted.bed"
 }
-Reich_1240k {
+AA213_1240k {
+  // Reference: Fu et al, 2015 (An early modern human from Romania with a recent Neanderthal ancestor), Panel 1+2
   reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
   reference_name = "hg19_evan"
   target_name    = "Reich_1240k"
   target_file    = "/mnt/archgen/Reference_Genomes/Human/hs37d5/SNPCapBEDs/1240K.pos.list_hs37d5.0based.bed"
 }
-
+Twist_1240k {
+  // Reference: Roland et al, 2022 (Three assays for in-solution enrichment of ancient human DNA at more than a million SNP)
+  reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
+  reference_name = "hg19_evan"
+  target_name = "Twist_1240k"
+  target_file = "/home/public/AncientDNA/probe_designs/TW1_Reich_Panel/gs01.target_positions_hg19.bed"
+}
 ```
 
 ## Pipeline Overview

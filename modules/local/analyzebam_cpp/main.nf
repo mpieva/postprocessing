@@ -5,7 +5,7 @@ process ANALYZE_BAM_CPP {
 
     input:
     tuple val(meta), path("${meta.RG}.bam"), path("${meta.RG}.bai")
-    tuple val(meta), path("sites.bed")
+    path("sites.bed")
 
     output:
     tuple val(meta), path("${meta.RG}*${meta.filter}.bam"), path("${meta.RG}.bai")  , emit: bam

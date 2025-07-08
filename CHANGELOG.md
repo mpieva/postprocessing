@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## v0.6 [xx.07.2025]
 
 ### Critical Bugfix
-- Fix the random changes in filesname and the RG-column in the final report!  
+- Fix duplicated meta-namespace in the analyzeBAM module, causing a swap in meta-maps, causing random swaps of IDs (RGs) and the calculated values in both the filenames and in the final report!. True IDs are only preserved in the headers of the BAM files from before the pipeline.  
 
 ## v0.5 [26.05.2025]
 

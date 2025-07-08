@@ -12,13 +12,17 @@ The pipeline runs with
 **Note:** To run nextflow+singularity, your kernel needs to support user-namespaces (see [here](https://github.com/apptainer/singularity/issues/5240#issuecomment-618405898) or [here](https://github.com/apptainer/singularity/issues/6341)).
 **NOTE**: The pipeline is configured to work within the computational environment of the Max-Planck-Institute for Evolutionary Anthropology.
 
+## WARNING
+
+**Do not** use version v0.5, as it contains a critical bug! Use version v0.6 or later!
+
 ## RUN
 
 ```
 NXF_VER=24.04.4
-nextflow run mpieva/postprocessing -r v0.5 --split SPLIT -profile PROFILE [OPTIONS]
+nextflow run mpieva/postprocessing -r v0.6 --split SPLIT -profile PROFILE [OPTIONS]
 ```
-use the `-r v0.5` flag to run a specific version of the pipeline
+use the `-r v0.6` flag to run a specific version of the pipeline
 
 ### SPLIT
 

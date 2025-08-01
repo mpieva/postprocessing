@@ -73,7 +73,7 @@ AA213_1240k {
   // Reference: Fu et al, 2015 (An early modern human from Romania with a recent Neanderthal ancestor), Panel 1+2
   reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
   reference_name = "hg19_evan"
-  target_name    = "Reich_1240k"
+  target_name    = "AA213_1240k"
   target_file    = "/mnt/archgen/Reference_Genomes/Human/hs37d5/SNPCapBEDs/1240K.pos.list_hs37d5.0based.bed"
 }
 Twist_1240k {

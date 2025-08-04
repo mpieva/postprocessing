@@ -26,7 +26,7 @@ use the `-r v0.6` flag to run a specific version of the pipeline
 
 ### SPLIT
 
-The pipeline starts with a **directory** of already demultiplexed and mapped BAM-files, provided with the `--split` flag. Unmapped and Paired sequences are **removed** in the analyzeBAM step. 
+The pipeline starts with a **directory** of already demultiplexed and mapped BAM-files, provided with the `--split` flag. Unmapped and unmerged paired sequences are **removed** in the analyzeBAM step. 
 
 
 ### OPTIONS

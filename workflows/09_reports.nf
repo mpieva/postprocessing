@@ -3,7 +3,7 @@ workflow write_reports {
     take: ch_versions
     main:
 
-    def outdir = "${params.reference_name}.${params.target_name}"
+    def outdir = "results.${params.reference_name}.${params.target_name}"
     def filterstring = "L${params.bamfilter_minlength}MQ${params.bamfilter_minqual}"
 
     //
@@ -36,8 +36,8 @@ workflow write_reports {
         "mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "panel", "target${filterstring}",
         "unique${filterstring}",'singletons', 'average_dups', 'average_fragment_length'].join('\t'),
     'deam' : ['#deam_sequences_left','average_deam_fragment_length',
-                "5'CT", "5'CT_95CI","5'#refC","cond5'CT", "cond5'CT_95CI", "cond5'#refC", 
-                "3'CT", "3'CT_95CI","3'#refC","cond3'CT", "cond3'CT_95CI", "cond3'#refC"
+                "5CT", "5CT_95CI","5#refC","cond5CT", "cond5CT_95CI", "cond5#refC", 
+                "3CT", "3CT_95CI","3#refC","cond3CT", "cond3CT_95CI", "cond3#refC"
                 ].join('\t')
     ]
     //
@@ -65,7 +65,7 @@ workflow write_reports {
     }
 
     ch_final
-    .collectFile( name:"final_report.tsv",
+    .collectFile( name:"final_report_${filterstring}.tsv",
         seed:[
         'RG',
         header_map['base'],

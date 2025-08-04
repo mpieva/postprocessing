@@ -5,7 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## v0.6 [xx.07.2025]
+## v0.7 [??]
+
+Minor changes related to naming of output-files and table-headers
+
+- include the processing parameters in the 'final_report.tsv' filename (#1)
+- remove single quotes from header names (make parsing easier)
+
+### Changes
+
+## v0.6 [08.07.2025]
 
 ### Critical Bugfix
 - Fix duplicated meta-namespace in the analyzeBAM module, causing a swap in meta-maps, causing random swaps of IDs (RGs) and the calculated values in both the filenames and in the final report!. True IDs are only preserved in the headers of the BAM files from before the pipeline.  

@@ -109,17 +109,26 @@ workflow {
     //
 
     //Take the time to fill the meta-map with some information
-    ch_bam.map {
+    ch_bam.map { it ->
+        def file = it[1]
+        def name = file.baseName.replace("sorted_", "")
+        
+        // Regex to extract the coredb ID (e.g., Lib.P.9540 or Cap.A.1234)
+        def matcher = name =~ /(Lib|Cap)[_.]?([A-Z])[_.]?(\d+)/
+        def coredb_id = matcher.find() ? "${matcher.group(1)}.${matcher.group(2)}.${matcher.group(3)}" : null
+
         [
             it[0] + [
-                "id":it[1].baseName.replace("sorted_",""),
-                "RG":it[1].baseName.replace("sorted_",""),
-                "reference":params.reference_name,
-                "reference_file":params.reference_file,
-                'target': params.target_file ? true : false,
-                'ontarget': params.target_file ? '.ontarget' : ''
+                "id"            : name,
+                "RG"            : name,
+                "file"          : name,
+                "reference"     : params.reference_name,
+                "reference_file": params.reference_file,
+                "target"        : params.target_file ? true : false,
+                "ontarget"      : params.target_file ? '.ontarget' : '',
+                "coredb"        : coredb_id
             ],
-            it[1]
+            file
         ]
     }
     .set{ ch_bam }

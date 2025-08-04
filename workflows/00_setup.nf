@@ -19,7 +19,7 @@ workflow setup {
         // Additional Setup, Copy Files etc.
         //
         //
-        def outdir = "${params.reference_name}.${params.target_name}"
+        def outdir = "results.${params.reference_name}.${params.target_name}"
         def start = workflow.start.format('yyyyMMdd_HHmmss')
 
         def commandFile = new File("${outdir}/nextflow/${start}_commands.txt")

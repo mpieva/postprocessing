@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## v0.7 [??]
+## v0.7 [04.08.2025]
 
 Minor changes related to naming of output-files and table-headers
 
 - include the processing parameters in the 'final_report.tsv' filename (#1)
 - remove single quotes from header names (make parsing easier)
+- add coreDB Ids in the final report
 
 ### Changes
 

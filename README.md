@@ -20,9 +20,9 @@ The pipeline runs with
 
 ```
 NXF_VER=24.04.4
-nextflow run mpieva/postprocessing -r v0.6 --split SPLIT -profile PROFILE [OPTIONS]
+nextflow run mpieva/postprocessing -r v0.7 --split SPLIT -profile PROFILE [OPTIONS]
 ```
-use the `-r v0.6` flag to run a specific version of the pipeline
+use the `-r v0.7` flag to run a specific version of the pipeline
 
 ### SPLIT
 

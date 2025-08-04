@@ -48,6 +48,10 @@ workflow write_reports {
             "reference_file","header_status",
             "mappedL${params.bamfilter_minlength}", "mapped${filterstring}", "%mapped${filterstring}", "panel", "in", // 'in' is what goes into bam-rmdup and its either the number of on-target or the mapped 
             "unique", "singletons", 'average_dups', 'average_fragment_length'].join('\t'),
+        'deam' : ['#deam_sequences_left','average_deam_fragment_length',
+                "5'CT", "5'CT_95CI","5'#refC","cond5'CT", "cond5'CT_95CI", "cond5'#refC", 
+                "3'CT", "3'CT_95CI","3'#refC","cond3'CT", "cond3'CT_95CI", "cond3'#refC"
+                ].join('\t')
     ]
 
     def getVals = {String key, meta, res=[] ->
@@ -67,13 +71,15 @@ workflow write_reports {
     ch_final
     .collectFile( name:"final_report_${filterstring}.tsv",
         seed:[
-        'RG',
+        'file',
+        'coreDB',
         header_map['base'],
         header_map['maps'],
         header_map['deam'],
         ].join('\t'), storeDir:"${outdir}/", newLine:true, sort:true
     ){[
-        it.RG,
+        it.file,
+        it.coredb,
         getVals('base', it),
         getVals('maps', it),
         getVals('deam', it),

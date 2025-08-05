@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.8 [05.08.2025]
+
+- Fix the bamrmdup_circular flag (was not working before)
+- Add the 'AA163_humanMT' profile
+
 ## v0.7 [04.08.2025]
 
 Minor changes related to naming of output-files and table-headers

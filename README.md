@@ -83,6 +83,13 @@ Twist_1240k {
   target_name = "Twist_1240k"
   target_file = "/home/public/AncientDNA/probe_designs/TW1_Reich_Panel/gs01.target_positions_hg19.bed"
 }
+AA163_humanMT {
+  // Reference: ?
+  bamrmdup_circular '"gi|251831106|ref|NC_012920.1|":16565'
+  reference_file = "/mnt/solexa/Genomes/human_MT/whole_genome.fa"
+  reference_name = "human_MT"
+  target_name = "AA163"
+}
 ```
 
 ## Pipeline Overview

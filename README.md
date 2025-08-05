@@ -20,9 +20,9 @@ The pipeline runs with
 
 ```
 NXF_VER=24.04.4
-nextflow run mpieva/postprocessing -r v0.7 --split SPLIT -profile PROFILE [OPTIONS]
+nextflow run mpieva/postprocessing -r v0.8 --split SPLIT -profile PROFILE [OPTIONS]
 ```
-use the `-r v0.7` flag to run a specific version of the pipeline
+use the `-r v0.8` flag to run a specific version of the pipeline
 
 ### SPLIT
 
@@ -101,4 +101,4 @@ AA163_humanMT {
 - [Mateja Hajdinjak](https://orcid.org/0000-0002-4064-0331)
 - [Matthias Meyer](https://orcid.org/0000-0002-4760-558X)
 - [Yaniv Schwiel](https://github.com/yanivsw/)
-
+- [Janet Kelso](https://orcid.org/0000-0002-4760-558X)

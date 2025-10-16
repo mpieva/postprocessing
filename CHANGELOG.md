@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.9 [16.10.2025]
+
+- Add the 'AA288_AA292_archaicPlus' profile
+
 ## v0.8 [05.08.2025]
 
 - Fix the bamrmdup_circular flag (was not working before)

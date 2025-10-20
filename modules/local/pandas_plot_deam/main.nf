@@ -9,6 +9,9 @@ process PLOT_DEAM{
     output:
     tuple val(meta), path("*.jpg") , emit: jpg
 
+    when:
+    meta['unique'] as int > 0
+
     script:
     """
     plot_deam_patterns.py ${meta.filename} \$(ls substitution_patterns_*.txt)

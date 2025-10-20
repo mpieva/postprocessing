@@ -96,7 +96,30 @@ workflow analyzeBAM {
         //
 
         ch_uniqbam.combine( BAM_RMDUP.out.txt, by:0 )
-        .map{ meta, bam, bai, stats ->
+        .branch {
+            has_reads: it[0]["target${filterstring}"] as int >0
+            no_reads: it[0]["target${filterstring}"] as int ==0
+            fail: true
+        }
+        .set{ ch_uniqbam }
+
+        ch_uniqbam.no_reads.map{ meta, bam, bai, stats ->
+            // sanitize the bam-rmdup output
+            def tmp = [
+                "in": 0, // corresponds to MappedBam
+                "unique":0, // corresponds to UniqueBam
+                "singletons":0, // corresponds to singletons
+                'average_dups':0
+            ]        
+            [
+                meta+tmp,
+                bam,
+                bai
+            ]
+        }
+        .set{ ch_uniqbam_empty }
+
+        ch_uniqbam.has_reads.map{ meta, bam, bai, stats ->
             def vals = stats.splitCsv(header:true, sep:"\t").first() // first because the splitCsv results in [[key:value]]
             // sanitize the bam-rmdup output
             def tmp = [
@@ -104,21 +127,23 @@ workflow analyzeBAM {
                 "unique":vals["out"].replace(",",""), // corresponds to UniqueBam
                 "singletons":vals["single@MQ20"].replace(",",""), // corresponds to singletons
             ]
-            // do some additional calculations
             def rmdup_stats = tmp + ["average_dups": (tmp['in'] as int) / (tmp["unique"] as int) ]
+            
             [
                 meta+rmdup_stats,
                 bam,
                 bai
             ]
         }
-        .set{ ch_uniqbam }
+        .set{ ch_uniqbam_reads }
+
+        ch_uniqbam_final = ch_uniqbam_reads.mix(ch_uniqbam_empty)
 
         //
         // 5. Get average fragment length
         //
 
-        GET_AVERAGE_LENGTH(ch_uniqbam)
+        GET_AVERAGE_LENGTH(ch_uniqbam_final)
 
         // save the output to the folder
         GET_AVERAGE_LENGTH.out.txt
@@ -127,7 +152,7 @@ workflow analyzeBAM {
         ch_versions = ch_versions.mix(GET_AVERAGE_LENGTH.out.versions.first())
 
         // save the length to the meta
-        ch_uniqbam = ch_uniqbam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
+        ch_uniqbam_final = ch_uniqbam_final.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
             .map{ meta, bam, bai, txt ->
                 [
                     meta+['average_fragment_length': txt.text.split(':')[1].trim() as float],
@@ -137,6 +162,6 @@ workflow analyzeBAM {
             }
 
     emit:
-        bam = ch_uniqbam
+        bam = ch_uniqbam_final
         versions = ch_versions
 }

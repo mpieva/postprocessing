@@ -19,9 +19,11 @@ for t in txt:
     df = pd.concat([df, tmp], ignore_index=False)
 
 df = df.melt(id_vars=['Position','read_length',"End"])
+
 bins = range(min(df['read_length']), max(df['read_length'])+1, 5)
 
-df['SizeBins'] = pd.cut(df['read_length'], bins=list(bins), right=False)
+df['SizeBins'] = pd.cut(df['read_length'], bins=(list(bins) if len(bins)>1 else 1), right=False)
+
 df = df.groupby(['SizeBins','variable', 'Position', "End"], as_index=False, observed=True).sum(numeric_only=True)
 df.drop('read_length', axis=1, inplace=True)
 

@@ -75,6 +75,14 @@ workflow analyzeBAM {
         ch_filterbam.combine( ANALYZE_BAM_CPP.out.stats, by:0 )
         .map{ meta, bam, bai, stats ->
             def vals = stats.splitCsv(sep:'\t', header:true).first() // first because the splitCsv results in [[key:value]]
+            
+            // Problem: We need to handle a 'null' in the "target${filterstring}" column of analyzeBAM (no bedfile provided, e.g. for shotgun) 
+            // Fill missing target-count if no target-file is provided
+
+            if( ! meta['target'] ) {
+                vals["target${filterstring}"] = vals["mapped${filterstring}"]
+            }
+            
             [
                 meta+vals,
                 bam,
@@ -95,7 +103,7 @@ workflow analyzeBAM {
         // 4. Get Post-Bam-rmdup stats
         //
 
-        ch_uniqbam.combine( BAM_RMDUP.out.txt, by:0 )
+        ch_combined_uniq = ch_uniqbam.combine( BAM_RMDUP.out.txt, by:0)
         .branch {
             has_reads: it[0]["target${filterstring}"] as int >0
             no_reads: it[0]["target${filterstring}"] as int ==0
@@ -123,7 +131,7 @@ workflow analyzeBAM {
             def vals = stats.splitCsv(header:true, sep:"\t").first() // first because the splitCsv results in [[key:value]]
             // sanitize the bam-rmdup output
             def tmp = [
-                "in": vals["in"].replace(",",""), // corresponds to MappedBam
+                "in": vals["in"].replace(",",""), // corresponds to MappedBam or onTarget
                 "unique":vals["out"].replace(",",""), // corresponds to UniqueBam
                 "singletons":vals["single@MQ20"].replace(",",""), // corresponds to singletons
             ]

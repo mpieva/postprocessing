@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.11 [11.11.2025]
+
+### Bugfixes
+
+- Fix processing of files that have no ontarget-sequences -> or 'null' ontarget-sequences (e.g. in shotgun profile)
+
 ## v0.10
 
 ### Bugfixes

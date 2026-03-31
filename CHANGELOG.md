@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## v0.12 [30.03.2026]
 
+- Full containerization of all pipeline processes.
+- Full switch to Yanivs c++ implementations of aDNA tools 
+
 ### Updates
 - Replace average-sequence-length perl-script with containerized samtools/awk function
 - Update version of analyzeBAM_cpp to v0.83

@@ -2,7 +2,7 @@ include { CHECK_HEADER       } from '../modules/local/header_check'
 include { SAMTOOLS_INDEX     } from '../modules/local/samtools_index' 
 include { BAM_RMDUP          } from '../modules/local/bam_rmdup'
 include { ANALYZE_BAM_CPP    } from '../modules/local/analyzebam_cpp'
-include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
+include { GET_AVERAGE_LENGTH } from '../modules/local/samtools_get_readlength'
 include { PLOT_READLENGTH    } from '../modules/local/pandas_plot_length'  
 
 

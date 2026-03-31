@@ -1,5 +1,5 @@
 include { FILTER_BAM_CPP     } from '../modules/local/filterbam_cpp'
-include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
+include { GET_AVERAGE_LENGTH } from '../modules/local/samtools_get_readlength'
 include { SAMTOOLS_COUNT     } from '../modules/local/samtools_count'
 
 workflow filter_deaminated {

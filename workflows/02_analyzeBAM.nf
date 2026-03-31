@@ -155,15 +155,14 @@ workflow analyzeBAM {
 
         // save the output to the folder
         GET_AVERAGE_LENGTH.out.txt
-            .map{it[1]}
+            .map { "${it[0].id}\t${it[1].text.trim()}\n" }
             .collectFile(name: "average_fragment_length.${filterstring}.txt", storeDir:"${outdir}/AnalyzeBAM_${filterstring}")
-        ch_versions = ch_versions.mix(GET_AVERAGE_LENGTH.out.versions.first())
 
         // save the length to the meta
         ch_uniqbam_final = ch_uniqbam_final.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
             .map{ meta, bam, bai, txt ->
                 [
-                    meta+['average_fragment_length': txt.text.split(':')[1].trim() as float],
+                    meta+['average_fragment_length': txt.text as float],
                     bam,
                     bai
                 ]

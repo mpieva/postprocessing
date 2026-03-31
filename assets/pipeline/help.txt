@@ -16,6 +16,8 @@ nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --
 --bamfilter_minlength          N        Minimum length of retained sequences (default: 35)
 --bamfilter_minqual            N        Minimum mapping quality of retained sequences (default: 25)
 --bamfilter_keep_vendorfail             Dont filter reads from bamfile that have the "vendor failed" flag set
+--deduplication_tool           NAME     Decide on a tool for deduplication (default: dedupBAM). 
+                                        [dedupBAM, bam-rmdup]
 --bamrmdup_cheap                        Cheap computation: skip the consensus calling
 --bamrmdup_circular            CHR:LEN  CHR is circular with length LEN
 
@@ -39,6 +41,13 @@ AA108_AA115_archaicAdmixture {
     params.target_name = "AA108_AA115_archaicAdmixture"
     params.target_file = "/home/public/AncientDNA/probe_designs/AA108-115_archaic_admixture/Archaic.align.noN.sorted.bed"
 }
+AA288_AA292_archaicPlus {
+    // Reference: TBD
+    params.reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
+    params.reference_name = "hg19_evan"
+    params.target_name = "AA288_AA292_archaicPlus"
+    params.target_file = "/home/public/AncientDNA/probe_designs/AA288-AA292_ArchaicPlus_WORKING_AltRef/ArchaicPlus_v3_final_TRF_sorted.bed"
+}
 AA213_1240k {
     // Reference: Fu et al, 2015 (An early modern human from Romania with a recent Neanderthal ancestor), Panel 1+2
     params.reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
@@ -55,6 +64,7 @@ Twist_1240k {
 }
 AA163_humanMT {
     // Reference: ?
+    params.deduplication_tool = 'bam-rmdup'
     params.bamrmdup_circular '"gi|251831106|ref|NC_012920.1|":16565'
     params.reference_file = "/mnt/solexa/Genomes/human_MT/whole_genome.fa"
     params.reference_name = "human_MT"

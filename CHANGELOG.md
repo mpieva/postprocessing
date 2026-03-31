@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.12 [30.03.2026]
+
+### Updates
+- Replace average-sequence-length perl-script with containerized samtools/awk function
+- Update version of analyzeBAM_cpp to v0.83
+    - Remove the compiled binaries and the src (ancient_dna_cpp_tools) from this repo
+    - Run ancient_dna_cpp_tools in a containerized environment (see [Dockerfile](assets/docker/analyzebam_cpp_dockerfile))
+- WIP: For non-circular reference genomes, replace bam-rmdup with dedupBam v0.21 (ancient_dna_cpp_tools). 
+    - This changes the way the 'unique' sequence from each cluster is called.
+- WIP: add profiles for mapping
+    - Elephant, Rat and Varanus
+
 ## v0.11 [11.11.2025]
 
 ### Bugfixes
@@ -68,7 +80,7 @@ Use the C++ implementation of analyzeBam (written by Yaniv) for processing
 ### Changes
 
 - **Replace the analyzeBAM workflow**
-  1. Use Yanivs analyzeBAM rewrite [gitlab](https://vcs.eva.mpg.de/yaniv_swiel/analysebam_cpp)
+  1. Use Yanivs analyzeBAM rewrite [github](https://github.com/yanivsw/ancient_dna_cpp_tools)
   2. This results in a slighly different naming of the columns in the output tables ("merged" instead of "&merged")
   3. include the 'shotgun' and 'archaicAdmixture' profile
 

@@ -1,0 +1,26 @@
+FROM ubuntu:latest
+
+ENV LD_LIBRARY_PATH="/r1/people/bioinf/src/htslib-1.4"
+ENV CPLUS_INCLUDE_PATH="/r1/people/bioinf/src/htslib-1.4"
+
+RUN apt-get update 
+RUN apt-get install -y gcc g++ git make wget bzip2 libbz2-dev \
+    zlib1g-dev libncurses5-dev libncursesw5-dev liblzma-dev \
+    libcurl4-gnutls-dev autoconf
+
+RUN mkdir -p /r1/people/bioinf/src/ &&\
+    cd /r1/people/bioinf/src/ &&\
+    wget https://github.com/samtools/htslib/releases/download/1.4/htslib-1.4.tar.bz2 && \
+    tar -xvjf htslib-1.4.tar.bz2 && \
+    cd htslib-1.4 && \
+    autoreconf -i && \
+    make && \
+    make install
+    
+RUN cd &&\
+    git clone https://github.com/yanivsw/ancient_dna_cpp_tools && \
+    cd ancient_dna_cpp_tools && \
+    make && \
+    cp *BAM /usr/local/bin/
+
+CMD ["analyzeBAM"]

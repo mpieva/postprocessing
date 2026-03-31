@@ -1,4 +1,4 @@
-include { FILTER_BAM         } from '../modules/local/filterbam_cpp'
+include { FILTER_BAM_CPP     } from '../modules/local/filterbam_cpp'
 include { GET_AVERAGE_LENGTH } from '../modules/local/perl_get_readlength'
 include { SAMTOOLS_COUNT     } from '../modules/local/samtools_count'
 
@@ -16,23 +16,23 @@ workflow filter_deaminated {
         // Filter bam files for damage for conditional substitutions
         //
 
-        FILTER_BAM(bam)
+        FILTER_BAM_CPP(bam)
 
-        filterbam = FILTER_BAM.out.bam
-        versions = FILTER_BAM.out.versions.first()
+        filterbam = FILTER_BAM_CPP.out.bam
+        versions = FILTER_BAM_CPP.out.versions.first()
 
         GET_AVERAGE_LENGTH(filterbam)
 
+        // save the output to the folder
         GET_AVERAGE_LENGTH.out.txt
-            .map{it[1]}
+            .map { "${it[0].id}\t${it[1].text.trim()}\n" }
             .collectFile(name: "average_fragment_length.${filterstring}.deam.txt", storeDir:"${outdir}/FilterBAM_${filterstring}_3termini")
-        versions = versions.mix(GET_AVERAGE_LENGTH.out.versions.first())
 
         // save the length to the meta
         filterbam = filterbam.combine(GET_AVERAGE_LENGTH.out.txt, by:0)
             .map{ meta, bam, bai, txt ->
                 [
-                    meta+['average_deam_fragment_length': txt.text.split(':')[1].trim() as float],
+                    meta+['average_deam_fragment_length': txt.text as float],
                     bam,
                 ]
             }

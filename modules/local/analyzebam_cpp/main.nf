@@ -2,6 +2,7 @@ process ANALYZE_BAM_CPP {
     label "process_low"
     label "process_low"
     tag "$meta.id"
+    container (workflow.containerEngine ? "merszym/analyzebam_cpp:latest" : null)
 
     input:
     tuple val(meta), path("${meta.RG}.bam"), path("${meta.RG}.bai")

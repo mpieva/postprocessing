@@ -3,7 +3,11 @@ FROM ubuntu:latest
 ENV LD_LIBRARY_PATH="/r1/people/bioinf/src/htslib-1.4"
 ENV CPLUS_INCLUDE_PATH="/r1/people/bioinf/src/htslib-1.4"
 
-RUN apt-get update 
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    apt-add-repository ppa:git-core/ppa && \
+    apt-get update
+ 
 RUN apt-get install -y gcc g++ git make wget bzip2 libbz2-dev \
     zlib1g-dev libncurses5-dev libncursesw5-dev liblzma-dev \
     libcurl4-gnutls-dev autoconf
@@ -18,7 +22,7 @@ RUN mkdir -p /r1/people/bioinf/src/ &&\
     make install
     
 RUN cd &&\
-    git clone https://github.com/yanivsw/ancient_dna_cpp_tools && \
+    git clone --revision=97714ed00e354851c56e577e11c8b3f356ce1279 https://github.com/yanivsw/ancient_dna_cpp_tools && \
     cd ancient_dna_cpp_tools && \
     make && \
     cp *BAM /usr/local/bin/

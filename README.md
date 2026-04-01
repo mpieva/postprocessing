@@ -20,9 +20,9 @@ The pipeline runs with
 
 ```
 NXF_VER=24.04.4
-nextflow run mpieva/postprocessing -r v0.11 --split SPLIT -profile PROFILE [OPTIONS]
+nextflow run mpieva/postprocessing -r v0.12 --split SPLIT -profile PROFILE [OPTIONS]
 ```
-use the `-r v0.11` flag to run a specific version of the pipeline
+use the `-r v0.12` flag to run a specific version of the pipeline
 
 ### SPLIT
 
@@ -45,6 +45,8 @@ The pipeline starts with a **directory** of already demultiplexed and mapped BAM
 --bamfilter_minqual            N        [optional] Minimum mapping quality of retained sequences (default: 25)
 --bamfilter_keep_vendorfail             [optional] Keep reads in bamfile that have the "vendor failed" flag
 
+--deduplication_tool           NAME     [required] select deduplication tool (default: dedupBAM)
+                                                   [bam-rmdup, dedupBAM]
 --bamrmdup_cheap                        [optional] Bam-rmdup 'cheap' computation: skip the consensus calling
 --bamrmdup_circular            CHR:LEN  [optional] Bam-rmdup 'circular' option - CHR is circular with length LEN
 ```
@@ -96,6 +98,25 @@ AA163_humanMT {
   reference_file = "/mnt/solexa/Genomes/human_MT/whole_genome.fa"
   reference_name = "human_MT"
   target_name = "AA163"
+}
+# ELEPHANT
+shotgun_loxAfr4 {
+    reference_file = "/mnt/solexa/Genomes/loxAfr4/whole_genome.fa"
+    reference_name = "loxAfr4"
+    target_name = "shotgun"
+    target_file = false
+}
+shotgun_ratNor6{
+    reference_file = "/mnt/solexa/Genomes/ratNor6/whole_genome.fa"
+    reference_name = "ratNor6"
+    target_name = "shotgun"
+    target_file = false
+}
+shotgun_varKom{
+    reference_file = "/mnt/solexa/Genomes/varKom/whole_genome.fa"
+    reference_name = "varKom"
+    target_name = "shotgun"
+    target_file = false
 }
 ```
 

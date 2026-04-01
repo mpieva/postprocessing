@@ -1,9 +1,11 @@
-include { CHECK_HEADER       } from '../modules/local/header_check'
-include { SAMTOOLS_INDEX     } from '../modules/local/samtools_index' 
-include { BAM_RMDUP          } from '../modules/local/bam_rmdup'
-include { ANALYZE_BAM_CPP    } from '../modules/local/analyzebam_cpp'
-include { GET_AVERAGE_LENGTH } from '../modules/local/samtools_get_readlength'
-include { PLOT_READLENGTH    } from '../modules/local/pandas_plot_length'  
+include { CHECK_HEADER                            } from '../modules/local/header_check'
+include { SAMTOOLS_INDEX                          } from '../modules/local/samtools_index' 
+include { SAMTOOLS_INDEX as SAMTOOLS_INDEX_FILTER } from '../modules/local/samtools_index'
+include { BAM_RMDUP                               } from '../modules/local/bam_rmdup'
+include { DEDUP_BAM_CPP                           } from '../modules/local/dedup_bam_cpp'
+include { ANALYZE_BAM_CPP                         } from '../modules/local/analyzebam_cpp'
+include { GET_AVERAGE_LENGTH                      } from '../modules/local/samtools_get_readlength'
+include { PLOT_READLENGTH                         } from '../modules/local/pandas_plot_length'  
 
 
 workflow analyzeBAM {
@@ -92,60 +94,103 @@ workflow analyzeBAM {
         .set{ ch_filterbam }
 
         //
-        // 3. Run Bam-rmdup
+        // 3. and 4. Deduplication: with bam-rmdup or dedupBAM
         //
 
-        BAM_RMDUP(ch_filterbam)
-
-        ch_uniqbam = BAM_RMDUP.out.bam
-
-        //
-        // 4. Get Post-Bam-rmdup stats
-        //
-
-        ch_combined_uniq = ch_uniqbam.combine( BAM_RMDUP.out.txt, by:0)
-        .branch {
-            has_reads: it[0]["target${filterstring}"] as int >0
-            no_reads: it[0]["target${filterstring}"] as int ==0
-            fail: true
+        ch_index_for_deduplication = ch_filterbam.map{ meta, bam, old_bai ->
+            [meta, bam]
         }
-        .set{ ch_uniqbam }
 
-        ch_uniqbam.no_reads.map{ meta, bam, bai, stats ->
-            // sanitize the bam-rmdup output
-            def tmp = [
-                "in": 0, // corresponds to MappedBam
-                "unique":0, // corresponds to UniqueBam
-                "singletons":0, // corresponds to singletons
-                'average_dups':0
-            ]        
-            [
-                meta+tmp,
-                bam,
-                bai
-            ]
-        }
-        .set{ ch_uniqbam_empty }
+        // Index the bam file again
+        SAMTOOLS_INDEX_FILTER(ch_index_for_deduplication)
 
-        ch_uniqbam.has_reads.map{ meta, bam, bai, stats ->
-            def vals = stats.splitCsv(header:true, sep:"\t").first() // first because the splitCsv results in [[key:value]]
-            // sanitize the bam-rmdup output
-            def tmp = [
-                "in": vals["in"].replace(",",""), // corresponds to MappedBam or onTarget
-                "unique":vals["out"].replace(",",""), // corresponds to UniqueBam
-                "singletons":vals["single@MQ20"].replace(",",""), // corresponds to singletons
-            ]
-            def rmdup_stats = tmp + ["average_dups": (tmp['in'] as int) / (tmp["unique"] as int) ]
+        ch_for_deduplication = SAMTOOLS_INDEX_FILTER.out.indexed
+
+        // if bam-rmdup is selected
+        if(params.deduplication_tool == 'bam-rmdup') {
+
+            //
+            // Run deduplication
+            //
+
+            BAM_RMDUP(ch_for_deduplication)
+
+            ch_uniqbam = BAM_RMDUP.out.bam
+
+            // account for empty output
+            ch_combined_uniq = ch_uniqbam.combine( BAM_RMDUP.out.txt, by:0)
+            .branch {
+                has_reads: it[0]["target${filterstring}"] as int >0
+                no_reads: it[0]["target${filterstring}"] as int ==0
+                fail: true
+            }
+            .set{ ch_uniqbam }
+
+            ch_uniqbam.no_reads.map{ meta, bam, bai, stats ->
+                // sanitize the bam-rmdup output
+                def tmp = [
+                    "in": 0, // corresponds to MappedBam
+                    "unique":0, // corresponds to UniqueBam
+                    "singletons":0, // corresponds to singletons
+                    'average_dups':0
+                ]        
+                [
+                    meta+tmp,
+                    bam,
+                    bai
+                ]
+            }
+            .set{ ch_uniqbam_empty }
+
+            ch_uniqbam.has_reads.map{ meta, bam, bai, stats ->
+                def vals = stats.splitCsv(header:true, sep:"\t").first() // first because the splitCsv results in [[key:value]]
+                // sanitize the bam-rmdup output
+                def tmp = [
+                    "in": vals["in"].replace(",",""), // corresponds to MappedBam or onTarget
+                    "unique":vals["out"].replace(",",""), // corresponds to UniqueBam
+                    "singletons":vals["single@MQ20"].replace(",",""), // corresponds to singletons
+                ]
+                def rmdup_stats = tmp + ["average_dups": (tmp['in'] as int) / (tmp["unique"] as int) ]
+                
+                [
+                    meta+rmdup_stats,
+                    bam,
+                    bai
+                ]
+            }
+            .set{ ch_uniqbam_reads }
+
+            // 
+            // bam-rmdup output channel
+            //
+
+            ch_uniqbam_final = ch_uniqbam_reads.mix(ch_uniqbam_empty)
+        
+        //
+        // YANIVS DEDUP-BAM CPP Tool
+        //       
             
-            [
-                meta+rmdup_stats,
-                bam,
-                bai
-            ]
-        }
-        .set{ ch_uniqbam_reads }
+        } else { // deduplication_tool dedupBAM
 
-        ch_uniqbam_final = ch_uniqbam_reads.mix(ch_uniqbam_empty)
+            DEDUP_BAM_CPP(ch_for_deduplication)
+            ch_uniqbam = DEDUP_BAM_CPP.out.bam
+
+            // include the stats in the meta
+            ch_uniqbam.combine( DEDUP_BAM_CPP.out.csv, by:0 )
+            .map{ meta, bam, bai, stats ->
+                def vals = stats.splitCsv(sep:',', header:true).first() // first because the splitCsv results in [[key:value]
+                def avg = (vals['unique'] as int) == 0 ? 0 : (vals['in'] as int) / (vals['unique'] as int)
+                def rmdup_stats = vals + [ "average_dups": avg ]
+                
+                [
+                    meta+rmdup_stats,
+                    bam,
+                    bai
+                ]
+            }
+            .set{ ch_uniqbam_final }
+        
+        }     
 
         //
         // 5. Get average fragment length

@@ -9,16 +9,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Full containerization of all pipeline processes.
 - Full switch to Yanivs c++ implementations of aDNA tools 
+- Add Elephant, Rat and Varanus profiles
 
 ### Updates
 - Replace average-sequence-length perl-script with containerized samtools/awk function
-- Update version of analyzeBAM_cpp to v0.83
+- Update version of ancient_dna_cpp_tools
     - Remove the compiled binaries and the src (ancient_dna_cpp_tools) from this repo
     - Run ancient_dna_cpp_tools in a containerized environment (see [Dockerfile](assets/docker/analyzebam_cpp_dockerfile))
-- WIP: For non-circular reference genomes, replace bam-rmdup with dedupBam v0.21 (ancient_dna_cpp_tools). 
-    - This changes the way the 'unique' sequence from each cluster is called.
-- WIP: add profiles for mapping
-    - Elephant, Rat and Varanus
+- For non-circular reference genomes, replace bam-rmdup with dedupBam v0.21 (ancient_dna_cpp_tools). 
+    - Force the use of bam-rmdup with the `--deduplication_tool bam-rmdup` flag
+- Add more profiles
+    - `shotgun_loxAfr4` (Elephant) 
+    - `shotgun_ratNor6` (Rat)
+    - `shotgun_varKom` (Varanus)
+
 
 ## v0.11 [11.11.2025]
 

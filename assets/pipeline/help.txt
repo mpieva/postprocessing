@@ -21,6 +21,8 @@ nextflow run /mnt/scratch/merlin/software/run_postprocessing_pipeline/main.nf --
 --bamrmdup_cheap                        Cheap computation: skip the consensus calling
 --bamrmdup_circular            CHR:LEN  CHR is circular with length LEN
 
+--threads                      N        Set the number of threads per spawned job (default: 8)
+
 
 AVAILABLE PROFILES
 
@@ -69,4 +71,23 @@ AA163_humanMT {
     params.reference_file = "/mnt/solexa/Genomes/human_MT/whole_genome.fa"
     params.reference_name = "human_MT"
     params.target_name = "AA163"
+}
+# ELEPHANT
+shotgun_loxAfr4 {
+    params.reference_file = "/mnt/solexa/Genomes/loxAfr4/whole_genome.fa"
+    params.reference_name = "loxAfr4"
+    params.target_name = "shotgun"
+    params.target_file = false
+}
+shotgun_ratNor6{
+    params.reference_file = "/mnt/solexa/Genomes/ratNor6/whole_genome.fa"
+    params.reference_name = "ratNor6"
+    params.target_name = "shotgun"
+    params.target_file = false
+}
+shotgun_varKom{
+    params.reference_file = "/mnt/solexa/Genomes/varKom/whole_genome.fa"
+    params.reference_name = "varKom"
+    params.target_name = "shotgun"
+    params.target_file = false
 }

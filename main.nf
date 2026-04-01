@@ -55,6 +55,10 @@ if(!params.split && !(params.bam && params.rg)){
     log.info get_info_msg("Use: nextflow run mpieva/postprocessing {--rg FILE --bam FILE | --split DIR}")
     exit_with_error_msg("ArgumentError", "Too few arguments")
 }
+if(!['bam-rmdup', 'dedupBAM'].contains(params.deduplication_tool)){
+    log.info get_info_msg("Use: nextflow run mpieva/postprocessing {--rg FILE --bam FILE | --split DIR} --deduplication_tool [bam-rmdup | dedupBAM]")
+    exit_with_error_msg("ArgumentError", "Selected deduplication tool does not exist")
+}
 
 //
 //

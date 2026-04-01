@@ -13,6 +13,10 @@ process GET_AVERAGE_LENGTH {
 
     script:
     """
-    samtools view ${bam} | awk '{sum+=length(\$10); n++} END {print sum/n}' > average.txt
+    {
+        samtools view ${bam} | awk '{sum+=length(\$10); n++} END {print sum/n}' > average.txt
+    } || {
+        echo "0" > average.txt
+    }
     """
 }

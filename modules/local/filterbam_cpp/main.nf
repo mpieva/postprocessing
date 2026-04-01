@@ -19,5 +19,6 @@ process FILTER_BAM_CPP {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         filterBAM: \$(filterBAM --version)
+    END_VERSIONS
     """
 }

@@ -78,6 +78,27 @@ AA288_AA292_archaicPlus {
   target_name = "AA288_AA292_archaicPlus"
   target_file = "/home/public/AncientDNA/probe_designs/AA288-AA292_ArchaicPlus_WORKING_AltRef/ArchaicPlus_v3_final_TRF_sorted.bed"
 }
+AA293_AA295_archaicPlus_thirdAllele_hg19 {
+    // Reference: TBD
+    reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"
+    reference_name = "hg19_evan"
+    target_name = "AA293_AA295_archaicPlus_thirdAllele"
+    target_file = "/home/public/AncientDNA/probe_designs/AA293-AA295_ArchaicPlus_WORKING_thirdAllele/  ArchaicPlus_v3_final_TRF_sorted_52bp_ALT_REF_THIRD.bed"
+}
+AA293_AA295_archaicPlus_thirdAllele_hg19_3rd {
+    // Reference: TBD
+    reference_file = "/mnt/solexa/Genomes/hg19_evan_3rdBaseRef_withY/whole_genome.fa"
+    reference_name = "hg19_evan_3rdBaseRef_withY"
+    target_name = "AA293_AA295_archaicPlus_thirdAllele"
+    target_file = "/home/public/AncientDNA/probe_designs/AA293-AA295_ArchaicPlus_WORKING_thirdAllele/  ArchaicPlus_v3_final_TRF_sorted_52bp_ALT_REF_THIRD.bed"
+}
+AA293_AA295_archaicPlus_thirdAllele_hg19_alt {
+    // Reference: TBD
+    reference_file = "/mnt/solexa/Genomes/hg19_evan_ArchaicRef_withY/whole_genome.fa"
+    reference_name = "hg19_evan_ArchaicRef_withY"
+    target_name = "AA293_AA295_archaicPlus_thirdAllele"
+    target_file = "/home/public/AncientDNA/probe_designs/AA293-AA295_ArchaicPlus_WORKING_thirdAllele/  ArchaicPlus_v3_final_TRF_sorted_52bp_ALT_REF_THIRD.bed"
+}
 AA213_1240k {
   // Reference: Fu et al, 2015 (An early modern human from Romania with a recent Neanderthal ancestor), Panel 1+2
   reference_file = "/mnt/solexa/Genomes/hg19_evan/whole_genome.fa"

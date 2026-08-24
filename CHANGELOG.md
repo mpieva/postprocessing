@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## v0.13 [24.08.2026]
+
+- Add Profiles:
+  - AA293_AA295_archaicPlus_thirdAllele_hg19 
+  - AA293_AA295_archaicPlus_thirdAllele_hg19_3rd
+  - AA293_AA295_archaicPlus_thirdAllele_hg19_alt
+
 ## v0.12 [30.03.2026]
 
 - Full containerization of all pipeline processes.
